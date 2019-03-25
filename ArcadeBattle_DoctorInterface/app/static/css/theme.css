@@ -101,7 +101,7 @@ p {
 body {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.625;
     color: #666;
     -webkit-font-smoothing: antialiased;
@@ -4243,7 +4243,7 @@ section {
     font-weight: 400;
     text-transform: capitalize;
     line-height: 1;
-    padding: 22px 40px;
+    padding: 16px 20px;
     white-space: nowrap;
 }
 

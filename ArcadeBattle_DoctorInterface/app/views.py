@@ -4,3 +4,6 @@ from django.shortcuts import render
 
 def index(request):
     return  render(request, "basic_layout.html", {})
+
+def all_patients(request):
+    return  render(request, "all_patients.html", {})

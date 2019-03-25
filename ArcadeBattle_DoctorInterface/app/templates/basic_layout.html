@@ -34,6 +34,12 @@
     <!-- Main CSS-->
     <link href="{% static 'css/theme.css' %}" rel="stylesheet" media="all">
 
+    <!-- Jquery JS-->
+    <script src=" {% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+
+    <!-- MDBootstrap Datatables  -->
+    <link href="{% static 'css/addons/datatables.css' %}" rel="stylesheet">
+
 </head>
 
 <body class="animsition">
@@ -57,7 +63,7 @@
             <nav class="navbar-mobile">
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
-                        <li class="active">
+                        <li>
                             <a href="basic_layout.html">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
@@ -91,14 +97,14 @@
                             </ul>
                         </li>
 
-                        <li class="has-sub">
+                        <li class="has-sub {% if request.resolver_match.url_name == "all_patients" %} active {% endif %}" >
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-address-book"></i>Patients
                                 <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Patients</a>
+                                <li {% if request.resolver_match.url_name == "all_patients" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_patients' %}"><i class="fas fa-align-left"></i>All Patients</a>
                                 </li>
                                 <li>
                                     <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Patient</a>
@@ -141,7 +147,7 @@
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
-                        <li class="active">
+                        <li>
                             <a href="basic_layout.html">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
@@ -174,14 +180,15 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="has-sub">
+
+                        <li class="has-sub {% if request.resolver_match.url_name == "all_patients" %} active {% endif %}" >
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-address-book"></i>Patients
                                 <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Patients</a>
+                                <li {% if request.resolver_match.url_name == "all_patients" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_patients' %}"><i class="fas fa-align-left"></i>All Patients</a>
                                 </li>
                                 <li>
                                     <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Patient</a>
@@ -342,7 +349,8 @@
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
-                <h1>Will receive the blocks!</h1>
+                {% block content %}
+                {% endblock %}
             </div>
             <!-- END MAIN CONTENT-->
         </div>
@@ -350,8 +358,10 @@
 
     </div>
 
-    <!-- Jquery JS-->
-    <script src=" {% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{% static 'js/mdb.js' %}"></script>
+    <!-- MDBootstrap Datatables  -->
+    <script type="text/javascript" src="{% static 'js/addons/datatables.min.js' %}"></script>
     <!-- Bootstrap JS-->
     <script src=" {% static 'vendor/bootstrap-4.1/popper.min.js' %}"></script>
     <script src=" {% static 'vendor/bootstrap-4.1/bootstrap.min.js' %}"></script>
