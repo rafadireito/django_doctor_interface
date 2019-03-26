@@ -10,7 +10,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Charts</title>
+    <title>Arcade Battle - Doctor App</title>
 
     {% load staticfiles %}
     <!-- Fontfaces CSS-->
@@ -49,8 +49,8 @@
             <div class="header-mobile__bar">
                 <div class="container-fluid">
                     <div class="header-mobile-inner">
-                        <a class="logo" href="index.html">
-                            <img src="{% static 'images/icon/logo.png' %}" alt="CoolAdmin" />
+                        <a class="logo" href="/">
+                            <h2>Arcade Battle</h2>
                         </a>
                         <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">
@@ -64,7 +64,7 @@
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
                         <li>
-                            <a href="basic_layout.html">
+                            <a href="{% url 'statistics' %}">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
                         </li>
@@ -140,15 +140,15 @@
         <!-- MENU SIDEBAR-->
         <aside class="menu-sidebar d-none d-lg-block">
             <div class="logo">
-                <a href="#">
-                    <img src=" {% static 'images/icon/logo.png' %}" alt="Cool Admin" />
+                <a href="/">
+                    <h2>Arcade Battle</h2>
                 </a>
             </div>
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                         <li>
-                            <a href="basic_layout.html">
+                            <a href="{% url 'statistics' %}">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
                         </li>
@@ -230,8 +230,8 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="header-wrap">
-                            
                             <div class="header-button">
+                                <!--
                                 <div class="noti-wrap">
                                     <div class="noti__item js-item-menu">
                                         <i class="zmdi zmdi-comment-more"></i>
@@ -305,6 +305,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                !-->
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">

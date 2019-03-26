@@ -1,0 +1,248 @@
+{% extends "basic_layout.html" %}
+{% load staticfiles %}
+{% block content %}
+
+    <script type="text/javascript">
+        var gesturesChart = null;
+        var gamesScoresChart = null;
+        window.onload = function(){
+            var ctx = document.getElementById("gamesScoresChart").getContext("2d");
+
+            if(ctx) {
+                ctx.height = 150;
+                gamesScoresChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: [],
+                  type: 'line',
+                  defaultFontFamily: 'Poppins',
+                  datasets: [{
+                    label: "",
+                    data: [],
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(0,224,15,0.8)',
+                    borderWidth: 3,
+                    pointStyle: 'circle',
+                    pointRadius: 5,
+                    pointBorderColor: 'transparent',
+                    pointBackgroundColor: 'rgba(0,224,15,1)',
+                  }, {
+                    label: "",
+                    data: [],
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(224,0,205,0.8)',
+                    borderWidth: 3,
+                    pointStyle: 'circle',
+                    pointRadius: 5,
+                    pointBorderColor: 'transparent',
+                    pointBackgroundColor: 'rgba(224,0,205,1)',
+                  },{
+                    label: "",
+                    data: [],
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(227,15,0,0.8)',
+                    borderWidth: 3,
+                    pointStyle: 'circle',
+                    pointRadius: 5,
+                    pointBorderColor: 'transparent',
+                    pointBackgroundColor: 'rgba(227,15,0,1)',
+                  }, {
+                    label: "",
+                    data: [],
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(0,211,230,0.8)',
+                    borderWidth: 3,
+                    pointStyle: 'circle',
+                    pointRadius: 5,
+                    pointBorderColor: 'transparent',
+                    pointBackgroundColor: 'rgba(0,211,230,1)',
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  tooltips: {
+                    mode: 'index',
+                    titleFontSize: 12,
+                    titleFontColor: '#000',
+                    bodyFontColor: '#000',
+                    backgroundColor: '#fff',
+                    titleFontFamily: 'Poppins',
+                    bodyFontFamily: 'Poppins',
+                    cornerRadius: 3,
+                    intersect: false,
+                  },
+                  legend: {
+                    display: false,
+                    labels: {
+                      usePointStyle: true,
+                      fontFamily: 'Poppins',
+                    },
+                  },
+                  scales: {
+                    xAxes: [{
+                      display: true,
+                      gridLines: {
+                        display: false,
+                        drawBorder: false
+                      },
+                      scaleLabel: {
+                        display: true,
+                        labelString: 'Week'
+                      },
+                      ticks: {
+                        fontFamily: "Poppins"
+                      }
+                    }],
+                    yAxes: [{
+                      display: true,
+                      gridLines: {
+                        display: false,
+                        drawBorder: false
+                      },
+                      scaleLabel: {
+                        display: true,
+                        labelString: 'Highscore',
+                        fontFamily: "Poppins"
+
+                      },
+                      ticks: {
+                        fontFamily: "Poppins"
+                      }
+                    }]
+                  },
+                  title: {
+                    display: false,
+                    text: 'Normal Legend'
+                  }
+                }
+                });
+            }
+
+            var ctx = document.getElementById("gesturesChart").getContext("2d");
+            if (ctx) {
+                ctx.height = 150;
+                gesturesChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [],
+                            backgroundColor: [
+                                "rgba(138, 120, 255, 0.8)",
+                                "rgba(255, 197, 120, 0.8)",
+                                "rgba(237, 255, 120, 0.8)",
+                                "rgba(255, 120, 237, 0.8)"
+                            ],
+                            hoverBackgroundColor: [
+                                "rgba(138, 120, 255, 1)",
+                                "rgba(255, 197, 120, 1)",
+                                "rgba(237, 255, 120, 1)",
+                                "rgba(255, 120, 237, 1)"
+                            ]
+
+                        }],
+                        labels: []
+                    },
+
+                    options: {
+                        maintainAspectRatio: true,
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                fontFamily: 'Poppins'
+                            }
+
+                        },
+                        responsive: true
+                    }
+                });
+            }
+
+            select_changed();
+        }
+
+        function select_changed() {
+            gamesScoresChart.data.labels = [];
+            gamesScoresChart.data.datasets.forEach((dataset) => {
+                dataset.label = "";
+                dataset.data = [];
+            });
+            gesturesChart.data.datasets[0].data = [];
+            gesturesChart.data.labels = [];
+            var select = document.getElementById("patients_select").value;
+            switch (select) {
+                case "Daniel Nunes":
+                    gamesScoresChart.data.labels = ["1", "2", "3", "4"];
+                    gamesScoresChart.data.datasets[0].label = "Flappy Bird";
+                    gamesScoresChart.data.datasets[0].data = ["10", "12", "5", "21"];
+                    gamesScoresChart.data.datasets[1].label = "Space Invaders";
+                    gamesScoresChart.data.datasets[1].data = ["40", "45", "32", "44"];
+                    gamesScoresChart.update();
+                    gesturesChart.data.datasets[0].data = [40,60];
+                    gesturesChart.data.labels = ["Mão Aberta","Três dedos levantados"];
+                    gesturesChart.update();
+                    break;
+                case "Rafael Direito":
+                    gamesScoresChart.data.labels = ["1", "2", "3", "4", "5", "6"];
+                    gamesScoresChart.data.datasets[0].label = "Gun Fight";
+                    gamesScoresChart.data.datasets[0].data = ["2", "5", "15", "35", "40", "41"];
+                    gamesScoresChart.update();
+                    gesturesChart.data.datasets[0].data = [60,10,30];
+                    gesturesChart.data.labels = ["Mão fechada","Dois dedos levantados","Polegar e mindinho levantados"];
+                    gesturesChart.update();
+                    break;
+            }
+        }
+    </script>
+
+<div class="section__content section__content--p30">
+    <div class="container-fluid" style="margin-top: 2%">
+        <div class="row">
+            <div class="col-xs-4 col-sm-3 col-lg-2" style="text-align:right;">
+                <h1>Patient: </h1>
+            </div>
+            <div class="col-xs-6 col-sm-7 col-lg-8 form-group">
+                <select id="patients_select" onchange="select_changed()" class="form-control">
+                    <option>Daniel Nunes</option>
+                    <option>Rafael Direito</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 2%">
+            <div class="col-lg-6">
+                <div class="au-card m-b-30">
+                    <div class="au-card-inner">
+                        <h3 class="title-2 m-b-40">Games Scores</h3>
+                        <canvas id="gamesScoresChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="au-card m-b-30">
+                    <div class="au-card-inner">
+                        <h3 class="title-2 m-b-40">Gestures</h3>
+                        <canvas id="gesturesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="col-lg-6">
+                <div class="au-card m-b-30">
+                    <div class="au-card-inner">
+                        <h3 class="title-2 m-b-40">Team Commits</h3>
+                        <canvas id="team-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="au-card m-b-30">
+                    <div class="au-card-inner">
+                        <h3 class="title-2 m-b-40">Bar chart</h3>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+{% endblock %}
