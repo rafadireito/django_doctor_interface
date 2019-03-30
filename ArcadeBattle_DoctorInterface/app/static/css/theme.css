@@ -1163,11 +1163,12 @@ section {
     line-height: 1.25;
     color: #495057;
     text-align: center;
-    background-color: #e9ecef;
+    background-color: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.15);
     -webkit-border-radius: .25rem;
     -moz-border-radius: .25rem;
     border-radius: .25rem;
+    margin-right: 1%;
 }
 
 /* ----- Header ----- */

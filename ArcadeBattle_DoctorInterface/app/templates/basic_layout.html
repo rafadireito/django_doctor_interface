@@ -64,7 +64,7 @@
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
                         <li>
-                            <a href="{% url 'statistics' %}">
+                            <a href="{% url 'general_statistics' %}">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
                         </li>
@@ -74,8 +74,8 @@
                                 <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Admins</a>
+                                <li {% if request.resolver_match.url_name == "all_admins" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_admins' %}"><i class="fas fa-align-left"></i>All Admins</a>
                                 </li>
                                 <li>
                                     <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Admin</a>
@@ -88,8 +88,8 @@
                                 <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Doctors</a>
+                                <li {% if request.resolver_match.url_name == "all_doctors" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_doctors' %}"><i class="fas fa-align-left"></i>All Doctors</a>
                                 </li>
                                 <li>
                                     <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Doctor</a>
@@ -111,6 +111,7 @@
                                 </li>
                             </ul>
                         </li>
+                    <!--
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-hand-spock"></i>Gestures
@@ -125,7 +126,7 @@
                                 </li>
                             </ul>
                         </li>
-
+                    -->
                         <li>
                             <a href="basic_layout.html">
                                 <i class="fas fa-gamepad"></i>Games
@@ -148,7 +149,7 @@
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                         <li>
-                            <a href="{% url 'statistics' %}">
+                            <a href="{% url 'general_statistics' %}">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
                         </li>
@@ -158,8 +159,8 @@
                                 <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Admins</a>
+                                <li {% if request.resolver_match.url_name == "all_admins" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_admins' %}"><i class="fas fa-align-left"></i>All Admins</a>
                                 </li>
                                 <li>
                                     <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Admin</a>
@@ -172,8 +173,8 @@
                                 <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Doctors</a>
+                                <li {% if request.resolver_match.url_name == "all_doctors" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_doctors' %}"><i class="fas fa-align-left"></i>All Doctors</a>
                                 </li>
                                 <li>
                                     <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Doctor</a>
@@ -195,7 +196,7 @@
                                 </li>
                             </ul>
                         </li>
-                        
+                        <!--
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-hand-spock"></i>Gestures
@@ -210,7 +211,7 @@
                                 </li>
                             </ul>
                         </li>
-
+                        -->
                         <li>
                             <a href="basic_layout.html">
                                 <i class="fas fa-gamepad"></i>Games

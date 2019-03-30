@@ -22,5 +22,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="index"),
     path("all_patients", views.all_patients, name="all_patients"),
-    path("statistics", views.statistics, name="statistics")
+    path("all_admins", views.all_admins, name="all_admins"),
+    path("all_doctors", views.all_doctors, name="all_doctors"),
+    path("patient_statistics", views.patient_statistics, name="patient_statistics"),
+    path("admin_statistics", views.admin_statistics, name="admin_statistics"),
+    path("doctor_statistics", views.doctor_statistics, name="doctor_statistics"),
+    path("general_statistics", views.general_statistics, name="general_statistics")
 ]
