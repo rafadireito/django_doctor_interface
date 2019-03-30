@@ -25,3 +25,6 @@ def doctor_statistics(request):
 
 def general_statistics(request):
     return render(request, "general_statistics.html", {})
+
+def games(request):
+    return render(request, "games.html", {})
