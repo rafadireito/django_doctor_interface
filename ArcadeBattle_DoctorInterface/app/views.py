@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-
+from app.forms import AddPatient, AddAdmin, AddDoctor
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def index(request):
@@ -29,11 +30,38 @@ def general_statistics(request):
 def games(request):
     return render(request, "games.html", {})
 
+@csrf_exempt
 def add_patient(request):
-    return render(request, "add_patient.html", {})
+    if request.method == 'POST':
+        form = AddPatient(request.POST)
+        if form.is_valid():
+            #print(form.cleaned_data)
+            form = AddPatient()
+            return render(request, "add_patient.html", {'form':form})
+    else:
+        form = AddPatient()
+    return render(request, "add_patient.html", {'form':form})
 
+@csrf_exempt
 def add_admin(request):
-    return render(request, "add_admin.html", {})
+    if request.method == 'POST':
+        form = AddAdmin(request.POST)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            form = AddAdmin()
+            return render(request, "add_admin.html", {'form': form})
+    else:
+        form = AddAdmin()
+    return render(request, "add_admin.html", {'form': form})
 
+@csrf_exempt
 def add_doctor(request):
-    return render(request, "add_doctor.html", {})
+    if request.method == 'POST':
+        form = AddDoctor(request.POST)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            form = AddDoctor()
+            return render(request, "add_doctor.html", {'form': form})
+    else:
+        form = AddDoctor()
+    return render(request, "add_doctor.html", {'form': form})

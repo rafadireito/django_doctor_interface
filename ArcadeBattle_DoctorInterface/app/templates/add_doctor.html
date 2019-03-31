@@ -13,33 +13,31 @@
                     <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                         <div class="card-body card-block">
                             <div class="row form-group">
-                                <div class="col col-md-1 col-sm-2">
-                                    <label for="name" class=" form-control-label"><strong>Name</strong></label>
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.name.label_tag }}
                                 </div>
                                 <div class="col-12 col-md-5 col-sm-4">
-                                    <input type="text" id="name-input" required="required" name="name-input" placeholder="Insert doctor name" class="form-control">
+                                    {{ form.name }}
                                 </div>
-
-                                <div class="col col-md-1 col-sm-2">
-                                    <label for="contact" class=" form-control-label"><strong>Contact</strong></label>
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.contact.label_tag }}
                                 </div>
                                 <div class="col-12 col-md-5 col-sm-4">
-                                    <input type="number" id="contact-input" required="required" name="contact-input" placeholder="Insert doctor contact" class="form-control">
+                                    {{ form.contact }}
                                 </div>
                             </div>
                             <div class="row form-group">
-                                <div class="col col-md-1 col-sm-2">
-                                    <label for="email" class=" form-control-label"><strong>Email</strong></label>
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.email.label_tag }}
                                 </div>
                                 <div class="col-12 col-md-5 col-sm-4">
-                                    <input type="email" id="email-input" required="required" name="email-input" placeholder="Insert doctor email" class="form-control">
+                                    {{ form.email }}
                                 </div>
-
-                                <div class="col col-md-1 col-sm-2">
-                                    <label for="photo" class=" form-control-label"><strong>Photo</strong></label>
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.photo.label_tag }}
                                 </div>
                                 <div class="col-12 col-md-5 col-sm-4">
-                                    <input type="file" id="photo-input" required="required" name="photo-input" class="form-control-file">
+                                    {{ form.photo }}
                                 </div>
                             </div>
                         </div>
