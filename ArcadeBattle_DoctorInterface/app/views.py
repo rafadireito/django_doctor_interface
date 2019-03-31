@@ -28,3 +28,12 @@ def general_statistics(request):
 
 def games(request):
     return render(request, "games.html", {})
+
+def add_patient(request):
+    return render(request, "add_patient.html", {})
+
+def add_admin(request):
+    return render(request, "add_admin.html", {})
+
+def add_doctor(request):
+    return render(request, "add_doctor.html", {})

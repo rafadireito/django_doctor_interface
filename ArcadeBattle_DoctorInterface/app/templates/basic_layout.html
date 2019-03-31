@@ -77,8 +77,8 @@
                                 <li {% if request.resolver_match.url_name == "all_admins" %} class="active" {% endif %}>
                                     <a href="{% url 'all_admins' %}"><i class="fas fa-align-left"></i>All Admins</a>
                                 </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Admin</a>
+                                <li {% if request.resolver_match.url_name == "add_admin" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_admin' %}"><i class="fas fa-plus"></i>Add Admin</a>
                                 </li>
                             </ul>
                         </li>
@@ -91,8 +91,8 @@
                                 <li {% if request.resolver_match.url_name == "all_doctors" %} class="active" {% endif %}>
                                     <a href="{% url 'all_doctors' %}"><i class="fas fa-align-left"></i>All Doctors</a>
                                 </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Doctor</a>
+                                <li {% if request.resolver_match.url_name == "add_doctor" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_doctor' %}"><i class="fas fa-plus"></i>Add Doctor</a>
                                 </li>
                             </ul>
                         </li>
@@ -106,8 +106,8 @@
                                 <li {% if request.resolver_match.url_name == "all_patients" %} class="active" {% endif %}>
                                     <a href="{% url 'all_patients' %}"><i class="fas fa-align-left"></i>All Patients</a>
                                 </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Patient</a>
+                                <li {% if request.resolver_match.url_name == "add_patient" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_patient' %}"><i class="fas fa-plus"></i>Add Patient</a>
                                 </li>
                             </ul>
                         </li>
@@ -162,8 +162,8 @@
                                 <li {% if request.resolver_match.url_name == "all_admins" %} class="active" {% endif %}>
                                     <a href="{% url 'all_admins' %}"><i class="fas fa-align-left"></i>All Admins</a>
                                 </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Admin</a>
+                                <li {% if request.resolver_match.url_name == "add_admin" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_admin' %}"><i class="fas fa-plus"></i>Add Admin</a>
                                 </li>
                             </ul>
                         </li>
@@ -176,8 +176,8 @@
                                 <li {% if request.resolver_match.url_name == "all_doctors" %} class="active" {% endif %}>
                                     <a href="{% url 'all_doctors' %}"><i class="fas fa-align-left"></i>All Doctors</a>
                                 </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Doctor</a>
+                                <li {% if request.resolver_match.url_name == "add_doctor" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_doctor' %}"><i class="fas fa-plus"></i>Add Doctor</a>
                                 </li>
                             </ul>
                         </li>
@@ -191,8 +191,8 @@
                                 <li {% if request.resolver_match.url_name == "all_patients" %} class="active" {% endif %}>
                                     <a href="{% url 'all_patients' %}"><i class="fas fa-align-left"></i>All Patients</a>
                                 </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Patient</a>
+                                <li {% if request.resolver_match.url_name == "add_patient" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_patient' %}"><i class="fas fa-plus"></i>Add Patient</a>
                                 </li>
                             </ul>
                         </li>
