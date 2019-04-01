@@ -3,9 +3,18 @@
 {% block content %}
 
     <script type="text/javascript">
+
         var gesturesChart = null;
         var gamesScoresChart = null;
         window.onload = function(){
+
+            var slider = document.getElementById("myRange").firstChild.nextSibling;
+            var output = document.getElementById("progress_value");
+            output.innerHTML = slider.value + " %";
+
+            slider.oninput = function() {
+              output.innerHTML = this.value + " %";
+            }
             var ctx = document.getElementById("gamesScoresChart").getContext("2d");
 
             if(ctx) {
@@ -226,6 +235,8 @@
                                      aria-selected="false">Notes</a>
                                     <a class="nav-item nav-link" id="custom-nav-contact-tab" data-toggle="tab" href="#custom-nav-contact" role="tab" aria-controls="custom-nav-contact"
                                      aria-selected="false">Gestures</a>
+                                    <a class="nav-item nav-link" id="custom-nav-add-gesture-tab" data-toggle="tab" href="#custom-nav-add-gesture" role="tab" aria-controls="custom-nav-add-gesture"
+                                     aria-selected="false">Add Gesture</a>
                                      <a class="nav-item nav-link" id="custom-nav-statistics-tab" data-toggle="tab" href="#custom-nav-statistics" role="tab" aria-controls="custom-nav-statistics"
                                      aria-selected="false">Statistics</a>
                                 </div>
@@ -286,8 +297,61 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade" id="custom-nav-add-gesture" role="tabpanel" aria-labelledby="custom-nav-add-gesture-tab">
+                                    <div class="row" style="margin-top: 2%">
+                                        <div class="col-lg-12">
+                                            <div class="card">
+                                               <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                                    <div class="card-body card-block">
+                                                        <div class="card-body card-block">
+                                                            <div class="row form-group">
+                                                                <div class="col col-md-1 col-sm-2 ">
+                                                                    {{ form.name.label_tag }}
+                                                                </div>
+                                                                <div class="col-12 col-md-5 col-sm-4">
+                                                                    {{ form.name }}
+                                                                </div>
+                                                                <div class="col col-md-1 col-sm-2 ">
+                                                                    {{ form.default_difficulty.label_tag }}
+                                                                </div>
+                                                                <div id="myRange" class="col-12 col-md-4 col-sm-3">
+                                                                    {{ form.default_difficulty }}
+                                                                </div>
+                                                                <div class="col col-md-1 col-sm-1">
+                                                                    <small id="progress_value"></small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row form-group">
+                                                                <div class="col col-md-1 col-sm-2 ">
+                                                                    {{ form.repetitions.label_tag }}
+                                                                </div>
+                                                                <div class="col-12 col-md-5 col-sm-4">
+                                                                    {{ form.repetitions }}
+                                                                </div>
+                                                                <div class="col col-md-1 col-sm-2 ">
+                                                                    {{ form.image.label_tag }}
+                                                                </div>
+                                                                <!--<div class="col-12 col-md-5 col-sm-4">
+                                                                    {{ form.image }}
+                                                                </div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <button type="submit" class="btn btn-primary btn-sm">
+                                                            <i class="fa fa-dot-circle-o"></i> Submit
+                                                        </button>
+                                                        <button type="reset" class="btn btn-danger btn-sm">
+                                                            <i class="fa fa-ban"></i> Reset
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="tab-pane fade" id="custom-nav-profile" role="tabpanel" aria-labelledby="custom-nav-profile-tab">
-                                    <textarea id="notes" class="form-control" rows="15" cols="50" placeholder="Write your notes here" disabled></textarea>
+                                    <textarea id="notes" class="form-control" rows="12" cols="50" placeholder="Write your notes here" disabled></textarea>
                                     &nbsp;
                                     <div class="row">
                                         <button onclick="editNote()" id="editButton" class="form-control btn btn-success col-lg-2 col-md-3"><i class="fa fa-pencil-alt"></i>&nbsp;Edit</button>

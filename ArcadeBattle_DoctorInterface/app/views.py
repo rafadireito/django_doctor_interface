@@ -3,7 +3,7 @@ import ssl
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from app.forms import AddPatient, AddAdmin, AddDoctor
+from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
@@ -22,8 +22,19 @@ def all_admins(request):
 def all_doctors(request):
     return  render(request, "all_doctors.html", {})
 
+@csrf_exempt
 def patient_statistics(request):
-    return render(request, "patient_statistics.html", {"nif" : request.GET['nif']})
+    if request.method == 'POST':
+        form = AddGesture(request.POST, request.FILES)
+        if form.is_valid():
+            print(form.cleaned_data)
+            form = AddGesture()
+            return render(request, "patient_statistics.html", {"form": form, "nif": request.GET['nif']})
+        else:
+            print("Invalid form")
+    else:
+        form = AddGesture()
+    return render(request, "patient_statistics.html", {"form":form, "nif" : request.GET['nif']})
 
 def admin_statistics(request):
     return render(request, "admin_statistics.html", {"nif" : request.GET['nif']})
