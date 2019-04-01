@@ -40,11 +40,13 @@ def games(request):
 @csrf_exempt
 def add_patient(request):
     if request.method == 'POST':
-        form = AddPatient(request.POST)
+        form = AddPatient(request.POST, request.FILES)
         if form.is_valid():
-            #print(form.cleaned_data)
+            print(form.cleaned_data)
             form = AddPatient()
             return render(request, "add_patient.html", {'form':form})
+        else:
+            print("Invalid form")
     else:
         form = AddPatient()
     return render(request, "add_patient.html", {'form':form})
@@ -52,24 +54,27 @@ def add_patient(request):
 @csrf_exempt
 def add_admin(request):
     if request.method == 'POST':
-        form = AddAdmin(request.POST)
+        form = AddAdmin(request.POST, request.FILES)
         if form.is_valid():
-            # print(form.cleaned_data)
+            print(form.cleaned_data)
             form = AddAdmin()
             return render(request, "add_admin.html", {'form': form})
+        else:
+            print("Invalid form")
     else:
         form = AddAdmin()
     return render(request, "add_admin.html", {'form': form})
 
 @csrf_exempt
 def add_doctor(request):
-
     if request.method == 'POST':
-        form = AddDoctor(request.POST)
+        form = AddDoctor(request.POST, request.FILES)
         if form.is_valid():
-            # print(form.cleaned_data)
+            print(form.cleaned_data)
             form = AddDoctor()
             return render(request, "add_doctor.html", {'form': form})
+        else:
+            print("Invalid form")
     else:
         form = AddDoctor()
     return render(request, "add_doctor.html", {'form': form})

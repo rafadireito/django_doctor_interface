@@ -1,6 +1,5 @@
 from django import forms
 
-
 class AddPatient(forms.Form):
     def __init__(self, *args, **kwargs):
         super(forms.Form, self).__init__(*args, **kwargs)
