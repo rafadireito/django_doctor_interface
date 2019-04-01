@@ -14,7 +14,7 @@ def index(request):
     return redirect("/general_statistics")
 
 def all_patients(request):
-    return  render(request, "all_patients.html", {})
+    return render(request, "all_patients.html", {})
 
 def all_admins(request):
     return  render(request, "all_admins.html", {})
@@ -83,3 +83,7 @@ def add_doctor(request):
 def send_email(request):
     res = send_mail("Hello", "Your password is 123", "arcade.battle@outlook.com", ["rafael.neves.direito@ua.pt"], fail_silently=False)
     return HttpResponse('%s' % res)
+
+
+def login(request):
+    return render(request, "login.html", {})
