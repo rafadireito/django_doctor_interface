@@ -45,7 +45,7 @@ class AddDoctor(forms.Form):
                                  widget=forms.SelectDateWidget(years=range(1900, 2019)))
     contact = forms.IntegerField(label="Contact", help_text="Insert doctors contact")
     email = forms.EmailField(label="Email", help_text="Insert doctors email")
-    photo = forms.ImageField(label="Photo")
+    photo = forms.ImageField(label="Photo", required=False)
 
 
 class AddGesture(forms.Form):

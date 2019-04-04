@@ -72,9 +72,17 @@
                             <div class="row form-group">
                                 <div class="col col-md-1 col-sm-2 ">
                                 </div>
-                                <div class="col-12 col-md-5 col-sm-4">
-                                     <p style="color:red">Error Message!</p>
+                                {% ifequal state "error" %}
+                                <div class="col-12 col-md-10 col-sm-8">
+                                     <p style="color:red">{{ state_message }}</p>
                                 </div>
+                                {% endifequal %}
+
+                                {% ifequal state "success" %}
+                                <div class="col-12 col-md-10 col-sm-8">
+                                     <p style="color:green">{{ state_message }}</p>
+                                </div>
+                                {% endifequal %}
 
                             </div>
 
