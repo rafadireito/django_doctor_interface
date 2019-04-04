@@ -34,18 +34,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for pat in patients %}
                             <tr onclick="access_patient(this)">
-                                <td>Daniel Nunes</td>
-                                <td class="text-center">21/09/2004</td>
-                                <td class="text-center">11092874</td>
-                                <td>danielnunes98@ua.pt</td>
+                                <td>{{ pat.person.user.first_name }} {{ pat.person.user.last_name }}</td>
+                                <td class="text-center">{{ pat.person.birth_date }}</td>
+                                <td class="text-center">{{ pat.person.nif }}</td>
+                                <td>{{ pat.person.user.username }}</td>
                             </tr>
-                            <tr onclick="access_patient(this)">
-                                <td>Rafael Direito</td>
-                                <td class="text-center">01/01/2001</td>
-                                <td class="text-center">223344565</td>
-                                <td>rafael.neves.direito@ua.pt</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

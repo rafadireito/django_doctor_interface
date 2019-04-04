@@ -211,13 +211,13 @@
         }
 
         function editNote(){
-            document.getElementById("notes").disabled = false;
+            document.getElementById("notes_textarea").disabled = false;
             document.getElementById("saveButton").disabled = false;
             document.getElementById("editButton").disabled = true;
         }
 
         function saveNote(){
-            document.getElementById("notes").disabled = true;
+            document.getElementById("notes_textarea").disabled = true;
             document.getElementById("saveButton").disabled = true;
             document.getElementById("editButton").disabled = false;
         }
@@ -284,7 +284,7 @@
     <div class="container-fluid" style="margin-top: 2%">
         <div class="row">
             <div class="col-lg-12 form-group">
-                <h1 id="current_patient">Patient: </h1>
+                <h1 id="current_patient">Patient: {{ patient.person.user.first_name }} {{ patient.person.user.last_name }} </h1>
             </div>
         </div>
         <div class="row" style="margin-top: 2%">
@@ -313,11 +313,8 @@
                                             <div class="card">
                                                 <div class="card-body card-block">
                                                      <div class="mx-auto d-block">
-                                                        <img class="rounded-circle mx-auto d-block" src="{%  static 'images/icon/avatar-01.jpg' %}">
-                                                        <h5 class="text-sm-center mt-2 mb-1">Steven Lee</h5>
-                                                        <div class="location text-sm-center">
-                                                            <i class="fa fa-map-marker"></i> California, United States
-                                                        </div>
+                                                        <img class="rounded-circle mx-auto d-block" src="data:image/png;base64, {{ patient.person.photo_b64 }}">
+                                                        <h5 class="text-sm-center mt-2 mb-1">{{ patient.person.user.first_name }} {{ patient.person.user.last_name }}</h5>
                                                      </div>
                                                 </div>
                                             </div>
@@ -329,40 +326,50 @@
                                                         <div class="row form-group">
                                                             <div class="col col-md-12">
                                                                 <div class="input-group">
-                                                                    <div class="input-group-addon">
+                                                                    <div class="input-group-addon col-1">
                                                                         <i class="fa fa-user"></i>
                                                                     </div>
-                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="Name" class="form-control">
+                                                                    <input type="text" id="input1-group1" value="{{ patient.person.user.first_name }} {{ patient.person.user.last_name }}" disabled name="input1-group1" placeholder="Name" class="form-control">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="row form-group">
                                                             <div class="col col-md-12">
                                                                 <div class="input-group">
-                                                                    <div class="input-group-addon">
+                                                                    <div class="input-group-addon col-1">
                                                                         <i class="fa fa-envelope"></i>
                                                                     </div>
-                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="Email" class="form-control">
+                                                                    <input type="text" id="input1-group1" value="{{ patient.person.user.username }}" disabled name="input1-group1" placeholder="Email" class="form-control">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="row form-group">
                                                             <div class="col col-md-12">
                                                                 <div class="input-group">
-                                                                    <div class="input-group-addon">
-                                                                        <i class="fa fa-birthday-cake"></i>
+                                                                    <div class="input-group-addon col-1">
+                                                                        <i class="fa fa-phone"></i>
                                                                     </div>
-                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="Birth Date" class="form-control">
+                                                                    <input type="text" id="input1-group1" value="{{ patient.person.contact }}" disabled name="input1-group1" placeholder="Contact" class="form-control">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="row form-group">
                                                             <div class="col col-md-12">
                                                                 <div class="input-group">
-                                                                    <div class="input-group-addon">
-                                                                        <i class="fa fa-id-card"></i>
+                                                                    <div class="input-group-addon col-1">
+                                                                        NIF
                                                                     </div>
-                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="NIF" class="form-control">
+                                                                    <input type="text" id="input1-group1" value="{{ patient.person.nif }}" disabled name="input1-group1" placeholder="NIF" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group">
+                                                            <div class="col col-md-12">
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon col-1">
+                                                                        <i class="fas fa-birthday-cake"></i>
+                                                                    </div>
+                                                                    <input type="text" id="input1-group1" value="{{ patient.person.birth_date }}" disabled name="input1-group1" placeholder="Birth Date" class="form-control">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -449,7 +456,8 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="custom-nav-profile" role="tabpanel" aria-labelledby="custom-nav-profile-tab">
-                                    <textarea id="notes" class="form-control" rows="12" cols="50" placeholder="Write your notes here" disabled></textarea>
+                                    <textarea  id="notes_textarea" class="form-control" rows="12" cols="50" placeholder="Write your notes here" disabled >{{ patient.notes }}</textarea>
+
                                     &nbsp;
                                     <div class="row">
                                         <button onclick="editNote()" id="editButton" class="form-control btn btn-success col-lg-2 col-md-3"><i class="fa fa-pencil-alt"></i>&nbsp;Edit</button>
@@ -459,14 +467,17 @@
                                 </div>
                                 <div class="tab-pane fade" id="custom-nav-contact" role="tabpanel" aria-labelledby="custom-nav-contact-tab">
                                     <div class="row" style="margin-top: 2%">
+
+                                        {% for g in patient_gestures %}
+
                                         <div class="col-md-3">
                                             <div class="card">
                                                 <div class="card-header" style="text-align: center; background:#8C8C8C; color:#fff">
-                                                    <strong class="card-title mb-3 sm-6">...Gesture...</strong>
+                                                    <strong class="card-title mb-3 sm-6">{{ g.name }}</strong>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mx-auto d-block">
-                                                        <img class="mx-auto d-block" src="{% static 'images/hand3.png' %}" alt="Card image cap">
+                                                        <img class="mx-auto d-block" src="data:image/png;base64, {{ g.image }}" alt="Card image cap">
                                                     </div>
                                                     <hr>
                                                    <div class="card-text text-md-center">
@@ -480,92 +491,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
-                                            <div class="card">
-                                                <div class="card-header" style="text-align: center; background:#8C8C8C; color: #fff">
-                                                    <strong class="card-title mb-3">...Gesture...</strong>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mx-auto d-block">
-                                                        <img class="mx-auto d-block" src="{% static 'images/hand3.png' %}" alt="Card image cap">
-                                                    </div>
-                                                    <hr>
-                                                    <div class="card-text text-md-center">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-outline-primary video"
-                                                            data-toggle="modal" data-target="#gestureStatisticsModal" >
-                                                            <i class="fas fa-search-plus"></i> Gesture Statistics
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="card">
-                                                <div class="card-header" style="text-align: center; background:#8C8C8C; color: #fff">
-                                                    <strong class="card-title mb-3">...Gesture...</strong>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mx-auto d-block">
-                                                        <img class="mx-auto d-block" src="{% static 'images/hand3.png' %}" alt="Card image cap">
-                                                    </div>
-                                                    <hr>
-                                                    <div class="card-text text-md-center">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-outline-primary video"
-                                                            data-toggle="modal" data-target="#gestureStatisticsModal" >
-                                                            <i class="fas fa-search-plus"></i> Gesture Statistics
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="card">
-                                                <div class="card-header" style="text-align: center; background:#8C8C8C; color: #fff">
-                                                    <strong class="card-title mb-3">...Gesture...</strong>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mx-auto d-block">
-                                                        <img class="mx-auto d-block" src="{% static 'images/hand3.png' %}" alt="Card image cap">
-                                                    </div>
-                                                    <hr>
-                                                    <div class="card-text text-md-center">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-outline-primary video"
-                                                            data-toggle="modal" data-target="#gestureStatisticsModal" >
-                                                            <i class="fas fa-search-plus"></i> Gesture Statistics
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <div class="card">
-                                                <div class="card-header" style="text-align: center; background:#8C8C8C; color: #fff">
-                                                    <strong class="card-title mb-3">...Gesture...</strong>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mx-auto d-block">
-                                                        <img class="mx-auto d-block" src="{% static 'images/hand3.png' %}" alt="Card image cap">
-                                                    </div>
-                                                    <hr>
-                                                    <div class="card-text text-md-center">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-outline-primary video"
-                                                            data-toggle="modal" data-target="#gestureStatisticsModal" >
-                                                            <i class="fas fa-search-plus"></i> Gesture Statistics
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                        {% endfor %}
                                     </div>
-
                                 </div>
                                 <div class="tab-pane fade" id="custom-nav-statistics" role="tabpanel" aria-labelledby="custom-nav-statistics-tab">
                                     <div class="row" style="margin-top: 2%">
@@ -585,24 +512,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--
-                                        <div class="col-lg-6">
-                                            <div class="au-card m-b-30">
-                                                <div class="au-card-inner">
-                                                    <h3 class="title-2 m-b-40">Team Commits</h3>
-                                                    <canvas id="team-chart"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="au-card m-b-30">
-                                                <div class="au-card-inner">
-                                                    <h3 class="title-2 m-b-40">Bar chart</h3>
-                                                    <canvas id="barChart"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        -->
                                     </div>
                                 </div>
                             </div>
@@ -617,7 +526,7 @@
 
 
 <!-- modal gesture -->
-<div class="modal fade" id="gestureStatisticsModal" tabindex="-1" role="dialog" aria-labelledby="gestureStatisticsModalLabel" aria-hidden="true">
+<div class="modal fade" id="gestureStatisticsModal"  role="dialog" aria-labelledby="gestureStatisticsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
