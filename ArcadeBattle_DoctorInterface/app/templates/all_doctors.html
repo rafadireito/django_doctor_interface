@@ -34,18 +34,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for d in doctors %}
                             <tr onclick="access_patient(this)">
-                                <td>Doctor 1</td>
-                                <td class="text-center">21/09/2004</td>
-                                <td class="text-center">123456789</td>
-                                <td>doctor1@ua.pt</td>
+                                <td>{{ d.user.first_name }} {{ d.user.last_name }}</td>
+                                <td class="text-center">{{ d.birth_date }}</td>
+                                <td class="text-center">{{ d.nif }}</td>
+                                <td>{{ d.user.username }}</td>
                             </tr>
-                            <tr onclick="access_patient(this)">
-                                <td>Doctor 2</td>
-                                <td class="text-center">01/01/2001</td>
-                                <td class="text-center">987654321</td>
-                                <td>doctor2@ua.pt</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

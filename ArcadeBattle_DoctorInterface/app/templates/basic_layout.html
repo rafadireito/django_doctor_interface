@@ -264,7 +264,6 @@
                     <div class="container-fluid">
                         <div class="header-wrap">
                             <div class="header-button">
-                                <p>{{ request.user.photo_b64 }}</p>
 
                                 {% if request.user.is_authenticated %}
                                 <div class="account-wrap">
@@ -289,12 +288,14 @@
                                                     <span class="email">{{ request.user.email }}</span>
                                                 </div>
                                             </div>
+                                            {% if request.user.username != "admin" %}
                                             <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
                                                     <a href="{% url 'about' %}">
                                                         <i class="zmdi zmdi-account"></i>Account</a>
                                                 </div>
                                             </div>
+                                            {% endif %}
                                             <div class="account-dropdown__footer">
                                                 <a href="{% url 'logout' %}">
                                                     <i class="zmdi zmdi-power"></i>Logout</a>

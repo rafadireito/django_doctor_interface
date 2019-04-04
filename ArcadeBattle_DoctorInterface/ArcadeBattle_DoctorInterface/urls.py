@@ -37,5 +37,6 @@ urlpatterns = [
     path("add_patient", views.add_patient, name="add_patient"),
     path("add_admin", views.add_admin, name="add_admin"),
     path("add_doctor", views.add_doctor, name="add_doctor"),
+    path("reload_database", views.reload_database, name="reload_database"),
     path("send_email", views.send_email, name="send_mail"),
 ]

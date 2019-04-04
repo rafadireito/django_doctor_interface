@@ -3,7 +3,6 @@ from distutils.command import register
 from django.contrib.auth.models import User, Group
 from django.db import models
 
-# Create your models here.
 
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -12,9 +11,18 @@ class Person(models.Model):
     nif =  models.IntegerField()
     birth_date = models.DateField()
 
-
     def __str__(self):
         return self.user.first_name + " " + self.user.last_name
+
+
+class Game(models.Model):
+    name = models.CharField(max_length=200)
+    photo_b64 = models.TextField()
+    preview_link = models.TextField()
+
+    def __str__(self):
+        return self.name
+
 
 
 class Gestures(models.Model):

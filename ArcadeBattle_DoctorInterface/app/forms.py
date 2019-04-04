@@ -16,18 +16,24 @@ class AddPatient(forms.Form):
     email = forms.EmailField(label="Email", help_text="Insert patient email")
     photo = forms.ImageField(label="Photo")
 
+
 class AddAdmin(forms.Form):
     def __init__(self, *args, **kwargs):
         super(forms.Form, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if field_name != 'photo':
+            if field_name != 'photo' and field_name != 'birth_date':
                 field.widget.attrs['placeholder'] = field.help_text
                 field.widget.attrs['class'] = 'form-control'
 
-    name = forms.CharField(label="Name", help_text="Insert admin name")
-    contact = forms.IntegerField(label="Contact", help_text="Insert admin contact")
-    email = forms.EmailField(label="Email", help_text="Insert admin email")
-    photo = forms.ImageField(label="Photo")
+    first_name = forms.CharField(label="First Name", help_text="Insert admins first name")
+    last_name = forms.CharField(label="Last Name", help_text="Insert admins last name")
+    nif = forms.IntegerField(label="NIF", help_text="Insert admins NIF")
+    contact = forms.IntegerField(label="Contact", help_text="Insert admins contact")
+    email = forms.EmailField(label="Email", help_text="Insert admins email")
+    photo = forms.ImageField(label="Photo", required=False)
+    birth_date = forms.DateField(label="Birth Date", help_text="Insert admins birth date",
+                                 widget=forms.SelectDateWidget(years=range(1900, 2019)))
+
 
 
 class AddDoctor(forms.Form):
@@ -41,11 +47,11 @@ class AddDoctor(forms.Form):
     first_name = forms.CharField(label="First Name", help_text="Insert doctors first name")
     last_name = forms.CharField(label="Last Name", help_text="Insert doctors last name")
     nif = forms.IntegerField(label="NIF", help_text="Insert doctor NIF")
-    birth_date = forms.DateField(label="Birth Date", help_text="Insert doctor birth date",
-                                 widget=forms.SelectDateWidget(years=range(1900, 2019)))
     contact = forms.IntegerField(label="Contact", help_text="Insert doctors contact")
     email = forms.EmailField(label="Email", help_text="Insert doctors email")
     photo = forms.ImageField(label="Photo", required=False)
+    birth_date = forms.DateField(label="Birth Date", help_text="Insert doctor birth date",
+                                 widget=forms.SelectDateWidget(years=range(1900, 2019)))
 
 
 class AddGesture(forms.Form):
@@ -81,7 +87,6 @@ class UpdateProfile(forms.Form):
 
                 if field_name == 'email':
                     field.initial = user.username
-
 
                 if field_name == 'nif':
                     field.initial = user.person.nif

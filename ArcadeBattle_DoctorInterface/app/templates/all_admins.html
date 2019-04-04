@@ -34,18 +34,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for a in admins %}
                             <tr onclick="access_patient(this)">
-                                <td>Admin 1</td>
-                                <td class="text-center">21/09/2004</td>
-                                <td class="text-center">1</td>
-                                <td>admin1@ua.pt</td>
+                                <td>{{ a.user.first_name }} {{ a.user.last_name }}</td>
+                                <td class="text-center">{{ a.birth_date }}</td>
+                                <td class="text-center">{{ a.nif }}</td>
+                                <td>{{ a.user.username }}</td>
                             </tr>
-                            <tr onclick="access_patient(this)">
-                                <td>Admin 2</td>
-                                <td class="text-center">01/01/2001</td>
-                                <td class="text-center">2</td>
-                                <td>admin2@ua.pt</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

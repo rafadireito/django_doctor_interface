@@ -14,10 +14,10 @@
                         <div class="card-body card-block">
                             <div class="row form-group">
                                 <div class="col col-md-1 col-sm-2 ">
-                                    {{ form.name.label_tag }}
+                                    {{ form.first_name.label_tag }}
                                 </div>
                                 <div class="col-12 col-md-5 col-sm-4">
-                                    {{ form.name }}
+                                    {{ form.first_name }}
                                 </div>
                                 <div class="col col-md-1 col-sm-2 ">
                                     {{ form.contact.label_tag }}
@@ -26,13 +26,38 @@
                                     {{ form.contact }}
                                 </div>
                             </div>
+
                             <div class="row form-group">
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.last_name.label_tag }}
+                                </div>
+                                <div class="col-12 col-md-5 col-sm-4">
+                                    {{ form.last_name }}
+                                </div>
                                 <div class="col col-md-1 col-sm-2 ">
                                     {{ form.email.label_tag }}
                                 </div>
                                 <div class="col-12 col-md-5 col-sm-4">
                                     {{ form.email }}
                                 </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.nif.label_tag }}
+                                </div>
+                                <div class="col-12 col-md-5 col-sm-4">
+                                    {{ form.nif }}
+                                </div>
+                                <div class="col col-md-1 col-sm-2 ">
+                                    {{ form.birth_date.label_tag }}
+                                </div>
+                                <div class="col-12 col-md-5 col-sm-4">
+                                    {{ form.birth_date }}
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
                                 <div class="col col-md-1 col-sm-2 ">
                                     {{ form.photo.label_tag }}
                                 </div>
@@ -40,6 +65,27 @@
                                     {{ form.photo }}
                                 </div>
                             </div>
+
+                            <div class="row form-group">
+                                <div class="col col-md-1 col-sm-2 ">
+                                </div>
+                                {% ifequal state "error" %}
+                                <div class="col-12 col-md-10 col-sm-8">
+                                     <p style="color:red">{{ state_message }}</p>
+                                </div>
+                                {% endifequal %}
+
+                                {% ifequal state "success" %}
+                                <div class="col-12 col-md-10 col-sm-8">
+                                     <p style="color:green">{{ state_message }}</p>
+                                </div>
+                                {% endifequal %}
+
+                            </div>
+
+
+
+
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary btn-sm">
