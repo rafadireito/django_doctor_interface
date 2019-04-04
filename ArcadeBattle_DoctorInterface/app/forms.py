@@ -111,3 +111,30 @@ class UpdateProfile(forms.Form):
     contact = forms.IntegerField(label="Contact", help_text="Insert doctors contact")
     email = forms.EmailField(label="Email", help_text="Insert doctors email")
     photo = forms.FileField(label="Photo", required=False, widget=forms.FileInput(attrs={'onchange' : 'readFile(this)'}))
+
+
+class AddGame(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(forms.Form, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name != 'photo':
+                field.widget.attrs['placeholder'] = field.help_text
+                field.widget.attrs['class'] = 'form-control'
+            else:
+                field.initial = 'https://www.unesale.com/ProductImages/Large/notfound.png'
+
+    name = forms.CharField(label="Name", help_text="Insert game name")
+    preview_link = forms.CharField(label="Preview Link", help_text="Insert preview link")
+    photo = forms.FileField(label="Photo", widget=forms.FileInput(attrs={'onchange': 'readFile(this)'}))
+
+class UpdateNotes(forms.Form):
+    def __init__(self, patient, *args, **kwargs):
+        super(forms.Form, self).__init__(*args, **kwargs)
+        if patient != None:
+            for field_name, field in self.fields.items():
+                field.widget.attrs['placeholder'] = field.help_text
+                field.widget.attrs['class'] = 'form-control'
+                field.initial = patient.notes
+
+    notes = forms.CharField(help_text="Write your notes here", widget=forms.Textarea(attrs={"rows" : "12", "cols" : "50"}))
+

@@ -210,6 +210,21 @@
             }
         }
 
+        Function.prototype.toJSON = function() {
+          var parts = this
+              .toString()
+              .match(/^\s*function[^(]*\(([^)]*)\)\s*{(.*)}\s*$/)
+          ;
+          if (parts == null)
+              throw 'Function form not supported';
+
+          return [
+              'window.Function',
+              parts[1].trim().split(/\s*,\s*/),
+              parts[2]
+          ];
+       };
+
         function editNote(){
             document.getElementById("notes_textarea").disabled = false;
             document.getElementById("saveButton").disabled = false;
@@ -456,15 +471,28 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="custom-nav-profile" role="tabpanel" aria-labelledby="custom-nav-profile-tab">
-                                    <textarea  id="notes_textarea" class="form-control" rows="12" cols="50" placeholder="Write your notes here" disabled >{{ patient.notes }}</textarea>
-
-                                    &nbsp;
-                                    <div class="row">
-                                        <button onclick="editNote()" id="editButton" class="form-control btn btn-success col-lg-2 col-md-3"><i class="fa fa-pencil-alt"></i>&nbsp;Edit</button>
-                                        &nbsp;
-                                        <button onclick="saveNote()" id="saveButton" class="form-control btn btn-info col-lg-2 col-md-3" disabled><i class="fa fa-save"></i>&nbsp;Save</button>
-                                    </div>
-                                </div>
+                                   &nbsp;<div class="col-lg-12">
+                                       <div class="card">
+                                          <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                               <div class="card-body card-block">
+                                                   <div class="card-body card-block row">
+                                                       <div class="row form-group col-lg-12 col-md-12 col-sm-12" style="text-align: center">
+                                                           {{ form_notes.notes }}
+                                                       </div>
+                                                   </div>
+                                                   <div class="card-footer">
+                                                       <button type="submit" class="btn btn-primary btn-sm">
+                                                           <i class="fa fa-dot-circle-o"></i> Submit
+                                                       </button>
+                                                       <button type="reset" class="btn btn-danger btn-sm">
+                                                           <i class="fa fa-ban"></i> Reset
+                                                       </button>
+                                                   </div>
+                                               </div>
+                                          </form>
+                                       </div>
+                                   </div>
+                               </div>
                                 <div class="tab-pane fade" id="custom-nav-contact" role="tabpanel" aria-labelledby="custom-nav-contact-tab">
                                     <div class="row" style="margin-top: 2%">
 

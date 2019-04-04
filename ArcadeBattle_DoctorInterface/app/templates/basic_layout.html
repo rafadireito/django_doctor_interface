@@ -137,13 +137,20 @@
                         {% endif %}
                         {% endwith %}
 
-                        {% if request.user.is_authenticated %}
-                        <li>
-                             <a href="{% url 'games' %}">
+                        <li class="has-sub {% if request.resolver_match.url_name == "all_games" %} active {% endif %}" >
+                            <a class="js-arrow" href="#">
                                 <i class="fas fa-gamepad"></i>Games
+                                <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li {% if request.resolver_match.url_name == "all_games" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_games' %}"><i class="fas fa-align-left"></i>All Games</a>
+                                </li>
+                                <li {% if request.resolver_match.url_name == "add_game" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_game' %}"><i class="fas fa-plus"></i>Add Game</a>
+                                </li>
+                            </ul>
                         </li>
-                        {% endif %}
                     </ul>
                 </div>
             </nav>
@@ -242,13 +249,20 @@
                         {% endif %}
                         {% endwith %}
 
-                        {% if request.user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'games' %}">
+                        <li class="has-sub {% if request.resolver_match.url_name == "all_games" %} active {% endif %}" >
+                            <a class="js-arrow" href="#">
                                 <i class="fas fa-gamepad"></i>Games
+                                <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
                             </a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li {% if request.resolver_match.url_name == "all_games" %} class="active" {% endif %}>
+                                    <a href="{% url 'all_games' %}"><i class="fas fa-align-left"></i>All Games</a>
+                                </li>
+                                <li {% if request.resolver_match.url_name == "add_game" %} class="active" {% endif %}>
+                                    <a href="{% url 'add_game' %}"><i class="fas fa-plus"></i>Add Game</a>
+                                </li>
+                            </ul>
                         </li>
-                        {% endif %}
 
                     </ul>
                 </nav>

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture, UpdateProfile
+from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture, UpdateProfile, AddGame, UpdateNotes
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
@@ -73,26 +73,40 @@ def patient_statistics(request):
     if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group"] ):
         return redirect("login")
 
-    if request.method == 'POST':
-       form = AddGesture(request.POST, request.FILES)
-       if form.is_valid():
-            g = Gesture(pacientID=1, name=form.cleaned_data["name"], image=form.cleaned_data["gesture_image"], repetitions=form.cleaned_data["repetitions"],
-            default_difficulty=form.cleaned_data["default_difficulty"], decision_tree=form.cleaned_data["decision_tree"])
-            g.save()
-            form = AddGesture()
-            return render(request, "patient_statistics.html", {"form": form, "nif": request.GET['nif']})
-       else:
-            print("Invalid form")
-    else:
-       form = AddGesture()
-
     nif = request.GET['nif']
     person = Person.objects.get(nif=nif)
     p = Patient.objects.get(person=person)
-
     patient_gestures = list(Gesture.objects.filter(patient=p))
 
-    return render(request, "patient_statistics.html", {"form":form, "nif" : nif, "patient":p, "patient_gestures":patient_gestures})
+    notes_form = UpdateNotes(p)
+    add_gesture_form = AddGesture()
+
+    if request.method == 'POST':
+
+        if "notes" not in request.POST:
+           form = AddGesture(request.POST, request.FILES)
+           if form.is_valid():
+                g = Gesture(patient=p, name=form.cleaned_data["name"], image=form.cleaned_data["gesture_image"], repetitions=form.cleaned_data["repetitions"],
+                default_difficulty=form.cleaned_data["default_difficulty"], decision_tree=form.cleaned_data["decision_tree"])
+
+                g.save()
+                patient_gestures = list(Gesture.objects.filter(patient=p))
+
+                return render(request, "patient_statistics.html", {"form": add_gesture_form, "form_notes": notes_form, "nif": nif, "patient":p, "patient_gestures":patient_gestures})
+           else:
+                print("Invalid form")
+        else:
+            form = UpdateNotes(None, request.POST, request.FILES)
+            if form.is_valid():
+
+                Patient.objects.filter(person=person).update(notes=form.cleaned_data["notes"])
+                p = Patient.objects.get(person=person)
+                notes_form = UpdateNotes(p)
+                return render(request, "patient_statistics.html", {"form": add_gesture_form, "form_notes": notes_form, "nif": nif , "patient":p, "patient_gestures":patient_gestures})
+            else:
+                print("Invalid form")
+
+    return render(request, "patient_statistics.html", {"form":add_gesture_form, "form_notes": notes_form,  "nif" : nif, "patient":p, "patient_gestures":patient_gestures})
 
 
 def admin_statistics(request):
@@ -119,13 +133,13 @@ def general_statistics(request):
     return render(request, "general_statistics.html", {"user":request.user})
 
 
-def games(request):
+def all_games(request):
     # if user is not authenticaded -> login
     if not request.user.is_authenticated:
         return redirect("login")
 
     games = list(Game.objects.all())
-    return render(request, "games.html", {"games":games})
+    return render(request, "all_games.html", {"games":games})
 
 
 @csrf_exempt
@@ -281,6 +295,32 @@ def add_doctor(request):
         form = AddDoctor()
     return render(request, "add_doctor.html", {'form': form,  "state":None})
 
+@csrf_exempt
+def add_game(request):
+    # if user is not an admin not a doctor and isnt authenticated-> login
+    if not request.user.is_authenticated or request.user.username != "admin":
+        return redirect("login")
+
+    if request.method == 'POST':
+        form = AddGame(request.POST, request.FILES)
+        if form.is_valid():
+            print(form.cleaned_data)
+
+            photo_b64 = base64.b64encode(form.cleaned_data["photo"].file.read())
+            photo_b64 = photo_b64.decode()
+
+            g = Game(name=form.cleaned_data["name"], preview_link=form.cleaned_data["preview_link"],
+                     photo_b64=photo_b64)
+            g.save()
+            form = AddGame()
+            state_message = "The game was added to database"
+            return render(request, "add_game.html",
+                          {'form': form, "state": "success", "state_message": state_message})
+        else:
+            print("Invalid form")
+    else:
+        form = AddGame()
+    return render(request, "add_game.html", {'form':form, 'state':None})
 
 @csrf_exempt
 def about(request):
