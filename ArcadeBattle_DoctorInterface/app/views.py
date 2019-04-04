@@ -3,15 +3,16 @@ import smtplib
 import ssl
 
 from django.contrib.auth.models import User, Group
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture
+from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture, UpdateProfile
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 
 # Create your views here.
-from app.models import Person
+from app.models import Person, Gestures
 
 
 def index(request):
@@ -45,16 +46,20 @@ def all_doctors(request):
 def patient_statistics(request):
     if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group"] ):
         return redirect("login")
+
     if request.method == 'POST':
-        form = AddGesture(request.POST, request.FILES)
-        if form.is_valid():
+       form = AddGesture(request.POST, request.FILES)
+       if form.is_valid():
             print(form.cleaned_data)
+            g = Gestures(pacientID=1, name=form.cleaned_data["name"], image=form.cleaned_data["gesture_image"], repetitions=form.cleaned_data["repetitions"],
+            default_difficulty=form.cleaned_data["default_difficulty"], decision_tree=form.cleaned_data["decision_tree"])
+            g.save()
             form = AddGesture()
             return render(request, "patient_statistics.html", {"form": form, "nif": request.GET['nif']})
-        else:
+       else:
             print("Invalid form")
     else:
-        form = AddGesture()
+       form = AddGesture()
     return render(request, "patient_statistics.html", {"form":form, "nif" : request.GET['nif']})
 
 
@@ -138,6 +143,9 @@ def add_doctor(request):
             contact = form_data["contact"]
             email = form_data["email"]
             photo = form_data["photo"]
+            birth_date = form_data["birth_date"]
+            nif = form_data["nif"]
+
             photo_b64 = base64.b64encode(photo.file.read())
             photo_b64 = photo_b64.decode()
 
@@ -146,7 +154,7 @@ def add_doctor(request):
             u.save()
 
             # link the user to a person
-            p = Person.objects.create(user=u, contact=contact, photo_b64=photo_b64)
+            p = Person.objects.create(user=u, contact=contact, nif=nif, birth_date=birth_date, photo_b64=photo_b64)
             p.save()
 
             # check if the group doctors exists, else create it
@@ -167,6 +175,54 @@ def add_doctor(request):
     else:
         form = AddDoctor()
     return render(request, "add_doctor.html", {'form': form})
+
+
+@csrf_exempt
+def about(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    user = request.user
+
+    if request.method == 'POST':
+        form = UpdateProfile(None, request.POST, request.FILES)
+        print(form)
+        if form.is_valid():
+            # get info form form
+            form_data = form.cleaned_data
+            first_name = form_data["first_name"]
+            last_name = form_data["last_name"]
+            contact = form_data["contact"]
+            email = form_data["email"]
+            photo = form_data["photo"]
+            birth_date = form_data["birth_date"]
+            nif = form_data["nif"]
+
+            # get user and udate it
+            u = User.objects.filter(username=email)
+            u.update(first_name=first_name, last_name=last_name)
+
+            # get user and udate it
+            p = Person.objects.filter(user=u[0])
+            p.update(user= u[0], contact=contact, nif=nif, birth_date=birth_date)
+
+            # if there is a photo to update
+            if photo != None:
+                photo_b64 = base64.b64encode(photo.file.read())
+                photo_b64 = photo_b64.decode()
+                p = p.update(photo_b64=photo_b64)
+
+
+
+            return redirect("/")
+        else:
+            print("Invalid form")
+            print(messages.error(request, "Error"))
+    else:
+        form = UpdateProfile(user)
+
+    return render(request, "about.html", {'form': form})
+
 
 
 def send_email(request):

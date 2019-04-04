@@ -22,7 +22,6 @@
     // Setup Leap loop with frame callback function
     var controllerOptions = {};
     var hand_position_image_b64 = undefined;
-    var bad_hand_position_image_b64 = undefined;
     // to use HMD mode:
     controllerOptions.optimizeHMD = true;
 
@@ -145,12 +144,12 @@
             pauseOnGesture = false;
         }
     }
-    
+
     function stopTesting() {
         document.getElementById("labelTestGesture").value = ""
         paused = true;
     }
-    
+
     function setup() {
         var canvas = createCanvas(400, 400);
         canvas.parent("canvas_div");
@@ -294,7 +293,7 @@
 
     function collectRightGestures() {
         console.log("HAND: "+hand_position_image_b64);
-        document.getElementById("right_status_bars").innerHTML = '<p style="margin-left: 20px;">Collecting Right Gestures...</p><div class="progress" style="margin-left: 20px;width:115%"><div class="progress-bar bg-success progress-bar-striped active" role="progressbar"'+
+        document.getElementById("right_status_bars").innerHTML = '&nbsp<p>Collecting Right Gestures...</p><div class="progress" style="width:100%"><div class="progress-bar bg-success progress-bar-striped active" role="progressbar"'+
                                                            'aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">0%</div></div>'
         option = "Right";
         paused = false; // Start collecting images.
@@ -304,40 +303,40 @@
                 paused = true; // Stop collecting images.
                 hand_data = hand_data.slice(0, 500);
                 clearInterval(timer);
-                document.getElementById("right_status_bars").innerHTML = '<p style="margin-left: 20px;">Finished...</p><div class="progress" style="margin-left: 20px;width: 115%"><div class="progress-bar bg-success progress-bar-striped active" role="progressbar"'+
+                document.getElementById("right_status_bars").innerHTML = '&nbsp<p>Finished...</p><div class="progress" style="width: 100%"><div class="progress-bar bg-success progress-bar-striped active" role="progressbar"'+
                                                            'aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:100%">100%</div></div>'
                 console.log(hand_data)
 
                 document.getElementById("random_gesture_btn").disabled = false;
                 document.getElementById("right_gesture_btn").disabled = true;
             }
+            else {
 
-            var percentage = hand_data.length / 5;
+                var percentage = hand_data.length / 5;
 
-            if (percentage >= 80 && percentage <= 90){
-                hand_position_image_b64 = canvas.toDataURL("image/jpeg");
+                if (percentage >= 80 && percentage <= 90) {
+                    hand_position_image_b64 = canvas.toDataURL("image/jpeg");
+                }
+
+                document.getElementById("right_status_bars").innerHTML = '&nbsp<p>Collecting Right Gestures...</p><div class="progress" style="width: 100%"><div class="progress-bar bg-success progress-bar-striped active" ' +
+                    'role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:' + percentage + '%">' +
+                    percentage + '%</div></div>'
             }
-
-            document.getElementById("right_status_bars").innerHTML = '<p style="margin-left: 20px;">Collecting Right Gestures...</p><div class="progress" style="margin-left: 20px; width: 115%"><div class="progress-bar bg-success progress-bar-striped active" '+
-                                                               'role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:'+percentage+'%">'+
-                                                               percentage+'%</div></div>'
         }, 100);
 
     }
 
     function collectRandomGestures() {
-        document.getElementById("random_status_bars").innerHTML = '<p>Collecting Random Gestures...</p><div class="progress" style="width: 123%"><div class="progress-bar bg-danger progress-bar-striped active" role="progressbar"'+
+        document.getElementById("random_status_bars").innerHTML = '&nbsp<p>Collecting Random Gestures...</p><div class="progress" style="width: 100%"><div class="progress-bar bg-danger progress-bar-striped active" role="progressbar"'+
                                                            'aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">0%</div></div>'
         option = "Random";
         paused = false; // Start collecting images.
-        setTimeout(function() {
-            bad_hand_position_image_b64 = canvas.toDataURL("image/jpeg");
-        }, 3000);
+
         var timer2 = setInterval(function() {
             if (hand_data.length >= 1000) {
                 paused = true; // Stop collecting images.
                 clearInterval(timer2);
-                document.getElementById("random_status_bars").innerHTML = '<p>Finished...</p><div class="progress" style="width: 123%"><div class="progress-bar bg-danger progress-bar-striped active" role="progressbar"'+
+                document.getElementById("random_status_bars").innerHTML = '&nbsp<p>Finished...</p><div class="progress" style="width: 100%"><div class="progress-bar bg-danger progress-bar-striped active" role="progressbar"'+
                                                            'aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:100%">100%</div></div>'
                 trainAndTestDT();
 
@@ -346,10 +345,11 @@
                 document.getElementById("testGestureBtn").disabled = false;
                 document.getElementById("stopTestGesture").disabled = false;
 
+            }else {
+                var percentage = (hand_data.length - 500) / 5;
+                document.getElementById("random_status_bars").innerHTML = '&nbsp<p>Collecting Random Gestures...</p><div class="progress" style="width: 100%"><div class="progress-bar bg-danger progress-bar-striped active" ' +
+                    'role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:' + percentage + '%">' +
+                    percentage + '%</div></div>'
             }
-            var percentage = (hand_data.length - 500) / 5;
-            document.getElementById("random_status_bars").innerHTML = '<p>Collecting Random Gestures...</p><div class="progress" style="width: 123%"><div class="progress-bar bg-danger progress-bar-striped active" '+
-                                                               'role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:'+percentage+'%">'+
-                                                               percentage+'%</div></div>'
         }, 100);
     }

@@ -222,6 +222,39 @@
             document.getElementById("editButton").disabled = false;
         }
 
+
+        function resetModal(){
+            $('#addGestureModal').modal('hide');
+
+            document.getElementById("addGestureModal").innerHTML = '<div class="modal-dialog modal-lg" role="document"><div class="modal-content">\n' +
+                '            <div class="modal-header">\n' +
+                '                <h5 class="modal-title" id="addGestureModalLabel"></h5>\n' +
+                '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+                '                    <span aria-hidden="true">&times;</span>\n' +
+                '                </button>\n' +
+                '            </div>' +
+                '<div class="modal-body">\n' +
+                '                <div id="recognition_content" style="text-align: center">\n' +
+                '                    <div id="canvas_div" style="min-height: 450px">\n' +
+                '                    </div>\n' +
+                '                    <p id="gesture_name" style="diplay:none"></p>\n' +
+                '\n' +
+                '                    <button type="button" class="btn btn-success col-lg-5" id="right_gesture_btn" onclick="collectRightGestures()">Start Collecting Right Gestures</button>\n' +
+                '                    <button type="button" class="btn btn-danger col-lg-5" id="random_gesture_btn" disabled onclick="collectRandomGestures()">Start Collecting Random Gestures</button>\n' +
+                '                    <div id="right_status_bars"></div>\n' +
+                '                    <div id="random_status_bars"></div>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '\n' +
+                '            <div class="modal-footer">\n' +
+                '                <button type="button" class="btn btn-secondary" onclick="resetModal()">Cancel</button>\n' +
+                '                <button type="button" class="btn btn-primary" data-dismiss="modal" disabled id="confirmGesture" onclick="updateGestureImg()">Confirm</button>\n' +
+                '            </div>' +
+                '</div>';
+
+            setup();
+        }
+
         function updateGestureImg()
         {
             var gestureHolder = document.getElementById("gestureImg");
@@ -230,12 +263,21 @@
             {
                 //IMAGEM A GUARDAR
                 var b64 = hand_position_image_b64.split(',')[1];
+                document.getElementById("imageInputText").value = b64;
                 //JSON A GUARDAR
-                console.log(decision_trees[0]);
+                document.getElementById("jsonInputText").value = JSON.stringify(decision_trees[0]);
                 gestureHolder.setAttribute( 'src', 'data:image/png;base64,'+ b64 );
             }
 
+            resetModal()
         }
+
+        function resetGestureAndTest(){
+            document.getElementById("gestureImg").setAttribute('src', 'https://www.unesale.com/ProductImages/Large/notfound.png' );
+            document.getElementById("stopTestGesture").disabled = true;
+            document.getElementById("testGestureBtn").disabled = true;
+        }
+
     </script>
 
 <div class="section__content section__content--p30">
@@ -308,9 +350,19 @@
                                                             <div class="col col-md-12">
                                                                 <div class="input-group">
                                                                     <div class="input-group-addon">
-                                                                        <i class="fa fa-phone"></i>
+                                                                        <i class="fa fa-birthday-cake"></i>
                                                                     </div>
-                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="Contact" class="form-control">
+                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="Birth Date" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group">
+                                                            <div class="col col-md-12">
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-id-card"></i>
+                                                                    </div>
+                                                                    <input type="text" id="input1-group1" disabled name="input1-group1" placeholder="NIF" class="form-control">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -329,7 +381,9 @@
                                                         <div class="card-body card-block row">
 
                                                             <div class="row form-group col-lg-4 offset-lg-1 col-md-12 col-sm-12" style="text-align: center">
-                                                                <img class="img-responsive" id="gestureImg" src="https://www.unesale.com/ProductImages/Large/notfound.png" alt="Chania" width="460" height="345">
+                                                                <img class="img-responsive" id="gestureImg" name="gestureImage" src="https://www.unesale.com/ProductImages/Large/notfound.png" alt="Chania" width="460" height="345">
+                                                                {{ form.gesture_image }}
+                                                                {{ form.decision_tree }}
                                                             </div>
 
                                                             <div class="row form-group col-lg-6 offset-lg-1 col-md-12 col-sm-12">
@@ -368,7 +422,7 @@
                                                                     </button>
                                                                 </div>
 
-                                                                <div class="col-md-2 col-sm-2" style="padding-left:15px; padding-right:15px;">
+                                                                <div class="col-md-3 col-sm-3" style="padding-left:15px; padding-right:15px;">
                                                                      <input type="text" id="labelTestGesture" class="form-control" disabled>
                                                                 </div>
 
@@ -385,7 +439,7 @@
                                                         <button type="submit" class="btn btn-primary btn-sm">
                                                             <i class="fa fa-dot-circle-o"></i> Submit
                                                         </button>
-                                                        <button type="reset" class="btn btn-danger btn-sm">
+                                                        <button type="reset" class="btn btn-danger btn-sm" onclick="resetGestureAndTest()">
                                                             <i class="fa fa-ban"></i> Reset
                                                         </button>
                                                     </div>
@@ -678,7 +732,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" onclick="resetModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" disabled id="confirmGesture" onclick="updateGestureImg()">Confirm</button>
             </div>
         </div>
