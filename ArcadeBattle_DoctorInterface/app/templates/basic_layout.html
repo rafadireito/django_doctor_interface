@@ -63,11 +63,18 @@
             <nav class="navbar-mobile">
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
+
+                        {% if request.user.is_authenticated %}
                         <li>
                             <a href="{% url 'general_statistics' %}">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
                         </li>
+                        {% endif %}
+
+                        <!-- If the user is an admin he can see and add admins -->
+                        {% with "admin_group admin" as allowed_users %}
+                        {% if request.user.groups.all.0.name  in allowed_users or request.user.username == "admin"  %}
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-unlock-alt"></i>Admins
@@ -82,6 +89,12 @@
                                 </li>
                             </ul>
                         </li>
+                        {% endif %}
+                        {% endwith %}
+
+                        <!-- If the user is an admin he can see and add doctors -->
+                        {% with "doctors_group" as allowed_users %}
+                        {% if request.user.username == "admin" %}
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-medkit"></i></i>Doctors
@@ -96,7 +109,17 @@
                                 </li>
                             </ul>
                         </li>
+                        {% elif request.user.groups.all.0.name  in allowed_users %}
+                            <li {% if request.resolver_match.url_name == "all_doctors" %} class="active" {% endif %}>
+                                <a href="{% url 'all_doctors' %}"><i class="fas fa-align-left"></i>All Doctors</a>
+                            </li>
+                        {% endif %}
+                        {% endwith %}
 
+
+                         <!-- If the user is an admin he can see and add admins -->
+                        {% with "admin_group doctors_group" as allowed_users %}
+                        {% if request.user.groups.all.0.name  in allowed_users or request.user.username == "admin"  %}
                         <li class="has-sub {% if request.resolver_match.url_name == "all_patients" %} active {% endif %}" >
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-address-book"></i>Patients
@@ -111,27 +134,16 @@
                                 </li>
                             </ul>
                         </li>
-                    <!--
-                        <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-hand-spock"></i>Gestures
-                                <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
-                            </a>
-                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Gestures</a>
-                                </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Gesture</a>
-                                </li>
-                            </ul>
-                        </li>
-                    -->
+                        {% endif %}
+                        {% endwith %}
+
+                        {% if request.user.is_authenticated %}
                         <li>
-                            <a href="basic_layout.html">
+                             <a href="{% url 'games' %}">
                                 <i class="fas fa-gamepad"></i>Games
                             </a>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
@@ -148,11 +160,19 @@
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
+
+                        {% if request.user.is_authenticated %}
                         <li>
                             <a href="{% url 'general_statistics' %}">
                                 <i class="fas fa-chart-bar"></i>Statistics
                             </a>
                         </li>
+                        {% endif %}
+
+                        <!-- If the user is an admin he can see and add admins -->
+                        {% with "admin_group admin" as allowed_users %}
+                        {% if request.user.groups.all.0.name  in allowed_users or request.user.username == "admin"  %}
+
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-unlock-alt"></i>Admins
@@ -167,6 +187,15 @@
                                 </li>
                             </ul>
                         </li>
+
+                        {% endif %}
+                        {% endwith %}
+
+
+                        <!-- If the user is an admin he can see and add doctors -->
+                        {% with "doctors_group" as allowed_users %}
+                        {% if request.user.username == "admin" %}
+
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-medkit"></i></i>Doctors
@@ -182,6 +211,20 @@
                             </ul>
                         </li>
 
+                        {% elif request.user.groups.all.0.name  in allowed_users %}
+                            <li {% if request.resolver_match.url_name == "all_doctors" %} class="active" {% endif %}>
+                            <a href="{% url 'all_doctors' %}"><i class="fas fa-align-left"></i>All Doctors</a>
+                        </li>
+                        {% endif %}
+
+                        {% endwith %}
+
+
+
+                        <!-- If the user is an admin he can see and add admins -->
+                        {% with "admin_group doctors_group" as allowed_users %}
+                        {% if request.user.groups.all.0.name  in allowed_users or request.user.username == "admin"  %}
+
                         <li class="has-sub {% if request.resolver_match.url_name == "all_patients" %} active {% endif %}" >
                             <a class="js-arrow" href="#">
                                 <i class="fas fa-address-book"></i>Patients
@@ -196,27 +239,16 @@
                                 </li>
                             </ul>
                         </li>
-                        <!--
-                        <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-hand-spock"></i>Gestures
-                                <i class="fas fa-chevron-down" style="float:right; margin-top: 5px"></i>
-                            </a>
-                            <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-align-left"></i>All Gestures</a>
-                                </li>
-                                <li>
-                                    <a href="basic_layout.html"><i class="fas fa-plus"></i>Add Gesture</a>
-                                </li>
-                            </ul>
-                        </li>
-                        -->
+                        {% endif %}
+                        {% endwith %}
+
+                        {% if request.user.is_authenticated %}
                         <li>
                             <a href="{% url 'games' %}">
                                 <i class="fas fa-gamepad"></i>Games
                             </a>
                         </li>
+                        {% endif %}
 
                     </ul>
                 </nav>
@@ -232,101 +264,29 @@
                     <div class="container-fluid">
                         <div class="header-wrap">
                             <div class="header-button">
-                                <!--
-                                <div class="noti-wrap">
-                                    <div class="noti__item js-item-menu">
-                                        <i class="zmdi zmdi-comment-more"></i>
-                                        <span class="quantity">1</span>
-                                        <div class="mess-dropdown js-dropdown">
-                                            <div class="mess__title">
-                                                <p>You have 2 news message</p>
-                                            </div>
-                                            <div class="mess__item">
-                                                <div class="image img-cir img-40">
-                                                    <img src="{%  static 'images/icon/avatar-06.jpg' %}" alt="Michelle Moreno" />
-                                                </div>
-                                                <div class="content">
-                                                    <h6>Michelle Moreno</h6>
-                                                    <p>Have sent a photo</p>
-                                                    <span class="time">3 min ago</span>
-                                                </div>
-                                            </div>
-                                            <div class="mess__item">
-                                                <div class="image img-cir img-40">
-                                                    <img src="{% static 'images/icon/avatar-04.jpg' %}" alt="Diane Myers" />
-                                                </div>
-                                                <div class="content">
-                                                    <h6>Diane Myers</h6>
-                                                    <p>You are now connected on message</p>
-                                                    <span class="time">Yesterday</span>
-                                                </div>
-                                            </div>
-                                            <div class="mess__footer">
-                                                <a href="#">View all messages</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="noti__item js-item-menu">
-                                        <i class="zmdi zmdi-notifications"></i>
-                                        <span class="quantity">3</span>
-                                        <div class="notifi-dropdown js-dropdown">
-                                            <div class="notifi__title">
-                                                <p>You have 3 Notifications</p>
-                                            </div>
-                                            <div class="notifi__item">
-                                                <div class="bg-c1 img-cir img-40">
-                                                    <i class="zmdi zmdi-email-open"></i>
-                                                </div>
-                                                <div class="content">
-                                                    <p>You got a email notification</p>
-                                                    <span class="date">April 12, 2018 06:50</span>
-                                                </div>
-                                            </div>
-                                            <div class="notifi__item">
-                                                <div class="bg-c2 img-cir img-40">
-                                                    <i class="zmdi zmdi-account-box"></i>
-                                                </div>
-                                                <div class="content">
-                                                    <p>Your account has been blocked</p>
-                                                    <span class="date">April 12, 2018 06:50</span>
-                                                </div>
-                                            </div>
-                                            <div class="notifi__item">
-                                                <div class="bg-c3 img-cir img-40">
-                                                    <i class="zmdi zmdi-file-text"></i>
-                                                </div>
-                                                <div class="content">
-                                                    <p>You got a new file</p>
-                                                    <span class="date">April 12, 2018 06:50</span>
-                                                </div>
-                                            </div>
-                                            <div class="notifi__footer">
-                                                <a href="#">All notifications</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                !-->
+                                <p>{{ request.user.photo_b64 }}</p>
+
+                                {% if request.user.is_authenticated %}
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">
-                                            <img src="{% static 'images/icon/avatar-01.jpg' %}" alt="John Doe" />
+                                            <img src="data:image/png;base64, {{ request.user.person.photo_b64 }}" />
                                         </div>
                                         <div class="content">
-                                            <a class="js-acc-btn" href="#">john doe</a>
+                                            <a class="js-acc-btn" href="#">{{ request.user.first_name }} {{ request.user.last_name }}</a>
                                         </div>
                                         <div class="account-dropdown js-dropdown">
                                             <div class="info clearfix">
                                                 <div class="image">
                                                     <a href="#">
-                                                        <img src="{% static 'images/icon/avatar-01.jpg' %}" alt="John Doe" />
+                                                        <img src="data:image/png;base64,  {{ request.user.person.photo_b64 }}" />
                                                     </a>
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">john doe</a>
+                                                        <a href="">{{ request.user.first_name }} {{ request.user.last_name }}</a>
                                                     </h5>
-                                                    <span class="email">johndoe@example.com</span>
+                                                    <span class="email">{{ request.user.email }}</span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__body">
@@ -336,12 +296,15 @@
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__footer">
-                                                <a href="#">
+                                                <a href="{% url 'logout' %}">
                                                     <i class="zmdi zmdi-power"></i>Logout</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                {% else %}
+                                    <a href="{% url 'login' %}">Login</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -351,6 +314,7 @@
 
             <!-- MAIN CONTENT-->
             <div class="main-content">
+                <p>{{ request.user.doctor }}</p>
                 {% block content %}
                 {% endblock %}
             </div>

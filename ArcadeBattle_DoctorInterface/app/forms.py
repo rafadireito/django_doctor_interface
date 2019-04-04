@@ -1,4 +1,7 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
+
 
 class AddPatient(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -26,6 +29,7 @@ class AddAdmin(forms.Form):
     email = forms.EmailField(label="Email", help_text="Insert admin email")
     photo = forms.ImageField(label="Photo")
 
+
 class AddDoctor(forms.Form):
     def __init__(self, *args, **kwargs):
         super(forms.Form, self).__init__(*args, **kwargs)
@@ -34,9 +38,10 @@ class AddDoctor(forms.Form):
                 field.widget.attrs['placeholder'] = field.help_text
                 field.widget.attrs['class'] = 'form-control'
 
-    name = forms.CharField(label="Name", help_text="Insert doctor name")
-    contact = forms.IntegerField(label="Contact", help_text="Insert doctor contact")
-    email = forms.EmailField(label="Email", help_text="Insert doctor email")
+    first_name = forms.CharField(label="First Name", help_text="Insert doctors first name")
+    last_name = forms.CharField(label="Last Name", help_text="Insert doctors last name")
+    contact = forms.IntegerField(label="Contact", help_text="Insert doctors contact")
+    email = forms.EmailField(label="Email", help_text="Insert doctors email")
     photo = forms.ImageField(label="Photo")
 
 class AddGesture(forms.Form):
@@ -51,3 +56,4 @@ class AddGesture(forms.Form):
     default_difficulty = forms.IntegerField(label="Default difficulty", widget=forms.NumberInput(attrs={'type':'range', 'step': '1', 'value':'50', 'min': '1', 'max': '100'}), help_text="Insert the default difficulty")
     repetitions = forms.IntegerField(label="Number of repetitions", min_value=1,  help_text="Insert the number of repetitions")
     #image = forms.ImageField(label="Image")
+

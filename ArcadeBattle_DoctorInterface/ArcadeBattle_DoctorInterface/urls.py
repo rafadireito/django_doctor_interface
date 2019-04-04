@@ -15,13 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="index"),
-    path("login", views.login, name="login"),
+    path("login", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
+    path("logout", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
+
     path("all_patients", views.all_patients, name="all_patients"),
     path("all_admins", views.all_admins, name="all_admins"),
     path("all_doctors", views.all_doctors, name="all_doctors"),
@@ -33,5 +36,5 @@ urlpatterns = [
     path("add_patient", views.add_patient, name="add_patient"),
     path("add_admin", views.add_admin, name="add_admin"),
     path("add_doctor", views.add_doctor, name="add_doctor"),
-    path("send_email", views.send_email, name="send_mail")
+    path("send_email", views.send_email, name="send_mail"),
 ]

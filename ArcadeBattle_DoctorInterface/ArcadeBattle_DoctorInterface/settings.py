@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from distutils.command import register
+
+from django.conf import settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -123,23 +126,11 @@ STATIC_URL = '/static/'
 
 
 # For sending emails:
-'''
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "arcade.battle1@gmail.com"
-EMAIL_HOST_PASSWORD = "rddnarcade1."
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = False
-'''
-
 EMAIL_HOST = 'smtp.office365.com'
 EMAIL_HOST_USER = 'arcade.battle@outlook.com'
 EMAIL_HOST_PASSWORD = 'Arcadebattle1.'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+
+LOGIN_REDIRECT_URL = "/"
