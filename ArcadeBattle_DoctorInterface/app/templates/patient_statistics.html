@@ -138,8 +138,9 @@
             topGamesChart.data.labels = [];
             topGamesChart.data.datasets[0].data=[];
 
-            topGamesChart.data.labels = ["Flappy Bird", "Gun Fight", "Quiz", "Space Invaders"];
-            topGamesChart.data.datasets[0].data = [22,16,30,9];
+
+            topGamesChart.data.labels = {{ games_quant.0|safe}};  //["Flappy Bird", "Gun Fight", "Quiz", "Space Invaders"];
+            topGamesChart.data.datasets[0].data = {{ games_quant.1 }} ; //[22,16,30,9];
             topGamesChart.update();
 
             Object.keys(gestureJSON).forEach(function(id) {

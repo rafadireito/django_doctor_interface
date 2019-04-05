@@ -33,7 +33,6 @@ class Game(models.Model):
         return self.name
 
 
-
 class Gesture(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -42,3 +41,17 @@ class Gesture(models.Model):
     default_difficulty = models.IntegerField()
     patient_difficulty = models.IntegerField()
     decision_tree = models.CharField(max_length=1024)
+
+    def __str__(self):
+        return self.name
+
+
+class GamePlayed(models.Model):
+    gesture = models.ForeignKey(Gesture, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    points = models.IntegerField()
+    average_difficulty = models.IntegerField();
+    date = models.DateField()
+
+    def __str__(self):
+        return self.gesture.name + ", " + self.game.name

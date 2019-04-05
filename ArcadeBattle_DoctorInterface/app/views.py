@@ -10,10 +10,13 @@ from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture, UpdateProfile
     RemoveGesture
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
+import random
+import string
+
 from django.conf import settings
 
 # Create your views here.
-from app.models import Person, Game, Patient, Gesture
+from app.models import Person, Game, Patient, Gesture, GamePlayed
 
 
 def index(request):
@@ -26,7 +29,7 @@ def index(request):
 @csrf_exempt
 def all_patients(request):
     # if user is not a doctor or isnt authenticated-> login
-    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group"] ):
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group", "admins_group"]):
         return redirect("login")
 
 
@@ -61,7 +64,7 @@ def all_patients(request):
 @csrf_exempt
 def all_admins(request):
     # if user is not an admin or isnt authenticated-> login
-    if not request.user.is_authenticated or  request.user.username != "admin":
+    if not request.user.is_authenticated or  (request.user.username != "admin" and  request.user.groups.all()[0].name != "admins_group"):
         return redirect("login")
 
     people = Person.objects.all()
@@ -94,7 +97,7 @@ def all_admins(request):
 
 @csrf_exempt
 def all_doctors(request):
-    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group"] ):
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group", "admins_group"]):
         return redirect("login")
 
     people = Person.objects.all()
@@ -103,25 +106,28 @@ def all_doctors(request):
     # remove doctor form
     form = RemoveUser()
 
-    if request.method == 'POST':
-        form = RemoveUser(request.POST)
+    # authorization
+    if request.user.username == "admin" or request.user.groups.all()[0].name == "admins_group":
 
-        if form.is_valid():
+        if request.method == 'POST':
+            form = RemoveUser(request.POST)
 
-            email = form.cleaned_data['email']
+            if form.is_valid():
 
-            if list(User.objects.filter(username=email)) != []:
-                # delete doctor
-                User.objects.get(username=email).delete()
+                email = form.cleaned_data['email']
 
-                # refresh doctors
-                people = Person.objects.all()
-                doctors = [p for p in people if p.user.groups.all()[0].name in ["doctors_group"]]
+                if list(User.objects.filter(username=email)) != []:
+                    # delete doctor
+                    User.objects.get(username=email).delete()
 
-            return render(request, "all_doctors.html", {'form': form, "doctors":doctors})
-        else:
-            print("Invalid form")
-            print(form.errors)
+                    # refresh doctors
+                    people = Person.objects.all()
+                    doctors = [p for p in people if p.user.groups.all()[0].name in ["doctors_group"]]
+
+                return render(request, "all_doctors.html", {'form': form, "doctors":doctors})
+            else:
+                print("Invalid form")
+                print(form.errors)
 
     return  render(request, "all_doctors.html", {'form': form, "doctors":doctors})
 
@@ -140,6 +146,18 @@ def patient_statistics(request):
     gestures_dict = {}
     for g in patient_gestures:
         gestures_dict[str(g.id)] = [g.name, g.patient_difficulty, g.default_difficulty]
+
+    #get patient games
+    games_quant = [ [], []]
+    pat_gestures = (Gesture.objects.filter(patient=p))
+    game_names = [g.game.name for g in GamePlayed.objects.all() if g.gesture in pat_gestures]
+
+    for n in game_names:
+        if n not in games_quant[0]:
+            count = len([x for x in game_names if x ==n])
+            games_quant[0].append(n)
+            games_quant[1].append(count)
+
 
     notes_form = UpdateNotes(p)
     add_gesture_form = AddGesture()
@@ -166,7 +184,7 @@ def patient_statistics(request):
                 return render(request, "patient_statistics.html",
                               {"form": add_gesture_form, "form_notes": notes_form, "gesture_form": remove_gesture_form,
                                "patient": p, "patient_gestures": patient_gestures,
-                               "gestures_dict": gestures_dict})
+                               "gestures_dict": gestures_dict, "games_quant":games_quant})
 
             print("DELETE GESTURE")
         if "notes" not in request.POST:
@@ -183,7 +201,7 @@ def patient_statistics(request):
                 return render(request, "patient_statistics.html",
                               {"form": add_gesture_form, "form_notes": notes_form, "gesture_form": remove_gesture_form,
                                "patient": p, "patient_gestures": patient_gestures,
-                               "gestures_dict": gestures_dict})
+                               "gestures_dict": gestures_dict, "games_quant":games_quant})
             else:
                 print("Invalid form")
         else:
@@ -202,7 +220,7 @@ def patient_statistics(request):
 
     return render(request, "patient_statistics.html",
                   {"form": add_gesture_form, "form_notes": notes_form, "gesture_form": remove_gesture_form,
-                   "patient": p, "patient_gestures": patient_gestures, "gestures_dict": gestures_dict})
+                   "patient": p, "patient_gestures": patient_gestures, "gestures_dict": gestures_dict, "games_quant":games_quant})
 
 
 def admin_statistics(request):
@@ -255,7 +273,7 @@ def all_games(request):
 @csrf_exempt
 def add_patient(request):
     # if user is not an admin or isnt authenticated-> login
-    if not request.user.is_authenticated or request.user.username != "admin":
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name != "admins_group"):
         return redirect("login")
 
     if request.method == 'POST':
@@ -288,9 +306,11 @@ def add_patient(request):
                 error_message = "There is already a user with this nif! The patient WASN'T added to database!"
                 return render(request, "add_patient", {'form': form, "state":"error", "state_message":error_message})
 
+            # generate pw and send email
+            pw = send_email_pw(email)
 
             # create a user
-            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password='pw')
+            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password=pw)
             u.save()
 
             # link the user to a person
@@ -314,7 +334,7 @@ def add_patient(request):
 
             form = AddPatient()
 
-            state_message = "The patient was added to database"
+            state_message = "The patient was added to database\nCheck your email for the password"
             return render(request, "add_patient.html", {'form': form,  "state":"success", "state_message":state_message})
         else:
             print("Invalid form")
@@ -325,7 +345,7 @@ def add_patient(request):
 @csrf_exempt
 def add_admin(request):
     # if user is not an admin or isnt authenticated-> login
-    if not request.user.is_authenticated or request.user.username != "admin":
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name != "admins_group"):
         return redirect("login")
 
     if request.method == 'POST':
@@ -359,8 +379,11 @@ def add_admin(request):
                 return render(request, "add_admin.html",
                               {'form': form, "state": "error", "state_message": error_message})
 
+            # generate pw and send email
+            pw = send_email_pw(email)
+
             # create a user
-            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password='pw')
+            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password=pw)
             u.save()
 
             # link the user to a person
@@ -380,7 +403,7 @@ def add_admin(request):
 
             form = AddAdmin()
 
-            state_message = "The admin was added to database"
+            state_message = "The admin was added to database\nCheck your email for the password"
             return render(request, "add_admin.html",
                           {'form': form, "state": "success", "state_message": state_message})
         else:
@@ -393,7 +416,7 @@ def add_admin(request):
 @csrf_exempt
 def add_doctor(request):
     # if user is not an admin or isnt authenticated-> login
-    if not request.user.is_authenticated or request.user.username != "admin":
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name != "admins_group"):
         return redirect("login")
 
     if request.method == 'POST':
@@ -426,9 +449,11 @@ def add_doctor(request):
                 error_message = "There is already a user with this nif! The doctor WASN'T added to database!"
                 return render(request, "add_doctor.html", {'form': form, "state":"error", "state_message":error_message})
 
+            # generate pw and send email
+            pw = send_email_pw(email)
 
             # create a user
-            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password='pw')
+            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password=pw)
             u.save()
 
             # link the user to a person
@@ -448,7 +473,7 @@ def add_doctor(request):
 
             form = AddDoctor()
 
-            state_message = "The doctor was added to database"
+            state_message = "The doctor was added to database\nCheck your email for the password"
             return render(request, "add_doctor.html", {'form': form,  "state":"success", "state_message":state_message})
         else:
             print("Invalid form")
@@ -459,7 +484,7 @@ def add_doctor(request):
 @csrf_exempt
 def add_game(request):
     # if user is not an admin not a doctor and isnt authenticated-> login
-    if not request.user.is_authenticated or request.user.username != "admin":
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name != "admins_group"):
         return redirect("login")
 
     if request.method == 'POST':
@@ -556,6 +581,7 @@ def reload_database(request):
 
     for g in Game.objects.all():
         g.delete()
+        
 
     #########################
     ####### add games #######
@@ -636,6 +662,41 @@ def reload_database(request):
     gest2.save()
     gest3.save()
 
+    # add to games played
+    GamePlayed.objects.create(gesture=gest1, game=g1, points=222, average_difficulty=76, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g2, points=122, average_difficulty=87, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g1, points=33, average_difficulty=87, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g3, points=222, average_difficulty=76, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g4, points=112, average_difficulty=89, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g3, points=112, average_difficulty=50, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g1, points=201, average_difficulty=80, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g2, points=300, average_difficulty=90, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g4, points=122, average_difficulty=76, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest1, game=g1, points=234, average_difficulty=90, date="2001-01-01").save()
+
+    GamePlayed.objects.create(gesture=gest2, game=g4, points=243, average_difficulty=20, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g2, points=122, average_difficulty=22, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g1, points=332, average_difficulty=22, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g3, points=234, average_difficulty=23, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g2, points=112, average_difficulty=32, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g3, points=112, average_difficulty=50, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g1, points=12, average_difficulty=42, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g2, points=300, average_difficulty=12, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g4, points=122, average_difficulty=76, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest2, game=g4, points=234, average_difficulty=12, date="2001-01-01").save()
+
+    GamePlayed.objects.create(gesture=gest3, game=g4, points=401, average_difficulty=88, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g2, points=443, average_difficulty=87, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g1, points=398, average_difficulty=79, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g1, points=341, average_difficulty=81, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g1, points=452, average_difficulty=94, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g2, points=423, average_difficulty=79, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g1, points=512, average_difficulty=98, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g2, points=398, average_difficulty=100, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g3, points=231, average_difficulty=90, date="2001-01-01").save()
+    GamePlayed.objects.create(gesture=gest3, game=g4, points=234, average_difficulty=89, date="2001-01-01").save()
+
+
 
     # check if the group doctors exists, else create it
     # finally add doctor to group
@@ -676,3 +737,25 @@ def reload_database(request):
     patients_group.user_set.add(u7)
 
     return redirect("/general_statistics")
+
+def send_email_pw(email):
+
+    letters = string.ascii_lowercase
+    pw = ''.join(random.choice(letters) for i in range(10))
+
+    subject = "Arcade Battle - Account"
+    message = "Welcome to arcade battle!" \
+              "\n" \
+              "\nYou have been granted access to our software. Here are your login credentials:" \
+              "\n * Email: " + email + "" \
+               "\n * Password: " + pw + "" \
+                "\n" \
+                "\n" \
+                "\nWe strongly advise you to change the password you were give. To do this go to the Account tab." \
+                "\n" \
+                "\n" \
+                "\nKind regards, " \
+                "\nArcade Battle"
+
+    x = send_mail(subject, message, "arcade.battle@outlook.com", [email], fail_silently=False)
+    return pw

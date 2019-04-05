@@ -42,7 +42,9 @@
                                 <th class="text-center">Birth Date</th>
                                 <th class="text-center">NIF</th>
                                 <th>E-mail</th>
+                                {% if request.user.username == "admin" or request.user.groups.all.0.name == "admins_group"%}
                                 <th>Rem.</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -52,6 +54,7 @@
                                 <td class="text-center" onclick="access_patient(this)">{{ d.birth_date }}</td>
                                 <td class="text-center" onclick="access_patient(this)">{{ d.nif }}</td>
                                 <td onclick="access_patient(this)">{{ d.user.username }}</td>
+                                {% if request.user.username == "admin" or request.user.groups.all.0.name == "admins_group"%}
                                 <td>
                                     <button type="button" class="btn-sm btn-danger"
                                         data-toggle="modal" data-target="#deleteModal"
@@ -59,6 +62,7 @@
                                         Remove
                                     </button>
                                 </td>
+                                {% endif %}
 
                             </tr>
                             {% endfor %}
