@@ -40,4 +40,5 @@ class Gesture(models.Model):
     image = models.TextField()
     repetitions = models.IntegerField()
     default_difficulty = models.IntegerField()
+    patient_difficulty = models.IntegerField()
     decision_tree = models.CharField(max_length=1024)
