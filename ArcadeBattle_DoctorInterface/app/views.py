@@ -273,7 +273,7 @@ def all_games(request):
 @csrf_exempt
 def add_patient(request):
     # if user is not an admin or isnt authenticated-> login
-    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name != "admins_group"):
+    if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["admins_group", "doctors_group"]):
         return redirect("login")
 
     if request.method == 'POST':
