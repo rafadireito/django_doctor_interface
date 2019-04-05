@@ -306,11 +306,9 @@ def add_patient(request):
                 error_message = "There is already a user with this nif! The patient WASN'T added to database!"
                 return render(request, "add_patient", {'form': form, "state":"error", "state_message":error_message})
 
-            # generate pw and send email
-            pw = send_email_pw(email)
-
             # create a user
-            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password=pw)
+            u = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, password='pw')
+            u.is_active = False
             u.save()
 
             # link the user to a person
@@ -607,6 +605,10 @@ def reload_database(request):
     u5 = User.objects.create_user(username="admin2@ua.pt", email="admin2@ua.pt", first_name="Louis", last_name="Long", password='admin2')
     u6 = User.objects.create_user(username="patient1@ua.pt", email="patient1@ua.pt", first_name="Billie", last_name="Sinatra", password='patient1')
     u7 = User.objects.create_user(username="patient2@ua.pt", email="patient2@ua.pt", first_name="Frank", last_name="Elton", password='patient2')
+
+    #unable login
+    u6.is_active = False
+    u7.is_active = False
 
     u1.save()
     u2.save()
