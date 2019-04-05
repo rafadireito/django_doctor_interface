@@ -512,6 +512,12 @@
                                                             onclick="updateGestureStatisticModal(this)" >
                                                             <i class="fas fa-search-plus"></i> Gesture Statistics
                                                         </button>
+                                                       <button type="button" class="btn-sm btn-danger"
+                                                            data-toggle="modal" data-target="#deleteModal"
+                                                            onclick="loadInfo('{{ g.image }}', '{{ g.name }}', '{{ g.patient.person.user.username }}')"
+                                                            style="margin-top: 10px">
+                                                            Remove
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -676,4 +682,78 @@
     </div>
 </div>
 <!-- end gesture large -->
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Are you sure you want to remove: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+                <div class="modal-body">
+
+                    <div class="row form-group">
+
+                        <div class="col-md-4 offset-md-4">
+                        <div class="card" style="margin-bottom:0px !important">
+                            <img id="gestureRemovePic" class="card-img-top" alt="Card image cap">
+                            <div class="card-text text-sm-center">
+                                <p id="gestureStatisticsName_card" ></p>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 10px">
+                            <div class="input-group-addon col-lg-3 offset-lg-1">
+                                <i class="far fa-hand-paper"></i> {{ gesture_form.gesture_name.label }}
+                            </div>
+                            <div class="input-group-addon col-lg-7" >
+                                {{ gesture_form.gesture_name }}
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 10px">
+                            <div class="input-group-addon col-lg-3 offset-lg-1">
+                                <i class="fas fa-envelope-square"></i> {{ gesture_form.user_email.label }}
+                            </div>
+                            <div class="input-group-addon col-lg-7" >
+                                {{ gesture_form.user_email }}
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadInfo(b64_image, g_name, u_mail)
+    {
+        console.log(g_name);
+        document.getElementById("gestureRemovePic").setAttribute('src', 'data:image/png;base64,' + b64_image );
+
+        document.getElementById("id_gesture_name").value = g_name;
+        $("#id_gesture_name").prop('readonly', true);
+
+        document.getElementById("id_user_email").value = u_mail;
+        $("#id_user_email").prop('readonly', true);
+    }
+
+</script>
 {% endblock %}

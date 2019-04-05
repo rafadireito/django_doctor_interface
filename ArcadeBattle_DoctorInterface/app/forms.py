@@ -147,3 +147,7 @@ class RemoveUser(forms.Form):
     first_name = forms.CharField(label="First Name")
     last_name = forms.CharField(label="Last Name")
     email = forms.CharField(label="E-mail")
+
+class RemoveGesture(forms.Form):
+    gesture_name = forms.CharField(label="Gesture Name")
+    user_email = forms.CharField(label="Patient Email")

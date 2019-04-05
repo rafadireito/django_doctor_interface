@@ -53,7 +53,7 @@
                                 <td class="text-center" onclick="access_patient(this)">{{ d.nif }}</td>
                                 <td onclick="access_patient(this)">{{ d.user.username }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger"
+                                    <button type="button" class="btn-sm btn-danger"
                                         data-toggle="modal" data-target="#deleteModal"
                                         onclick="loadInfo('{{ d.user.first_name }}', '{{ d.user.last_name }}', '{{ d.user.username }}')">
                                         Remove
@@ -70,7 +70,7 @@
     </div>
 </div>
 
-    <!-- modal add gesture -->
+<!-- modal add gesture -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -127,8 +127,5 @@
     </div>
 </div>
 
-<script>
-
-</script>
 
 {% endblock %}
