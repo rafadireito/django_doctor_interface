@@ -127,6 +127,7 @@ class AddGame(forms.Form):
     preview_link = forms.CharField(label="Preview Link", help_text="Insert preview link")
     photo = forms.FileField(label="Photo", widget=forms.FileInput(attrs={'onchange': 'readFile(this)'}))
 
+
 class UpdateNotes(forms.Form):
     def __init__(self, patient, *args, **kwargs):
         super(forms.Form, self).__init__(*args, **kwargs)
@@ -138,3 +139,8 @@ class UpdateNotes(forms.Form):
 
     notes = forms.CharField(help_text="Write your notes here", widget=forms.Textarea(attrs={"rows" : "12", "cols" : "50"}))
 
+
+class RemoveUser(forms.Form):
+    first_name = forms.CharField(label="First Name")
+    last_name = forms.CharField(label="Last Name")
+    email = forms.CharField(label="E-mail")

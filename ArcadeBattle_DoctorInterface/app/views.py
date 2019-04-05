@@ -6,7 +6,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture, UpdateProfile, AddGame, UpdateNotes
+from app.forms import AddPatient, AddAdmin, AddDoctor, AddGesture, UpdateProfile, AddGame, UpdateNotes, RemoveUser
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
@@ -54,19 +54,39 @@ def all_admins(request):
 
     return render(request, "all_admins.html", {"admins": admins})
 
-
+@csrf_exempt
 def all_doctors(request):
     if not request.user.is_authenticated or (request.user.username != "admin" and request.user.groups.all()[0].name not in ["doctors_group"] ):
         return redirect("login")
 
     people = Person.objects.all()
-    doctors = []
+    doctors = [p for p in people if p.user.groups.all()[0].name in ["doctors_group"]]
 
-    for p in people:
-        if p.user.groups.all()[0].name in ["doctors_group"]:
-            doctors.append(p)
+    # remove doctor form
+    form = RemoveUser()
 
-    return  render(request, "all_doctors.html", {"doctors":doctors})
+    if request.method == 'POST':
+        form = RemoveUser(request.POST)
+
+        if form.is_valid():
+
+            email = form.cleaned_data['email']
+
+            if list(User.objects.filter(username=email)) != []:
+                # delete doctor
+                User.objects.get(username=email).delete()
+
+                # refresh doctors
+                people = Person.objects.all()
+                doctors = [p for p in people if p.user.groups.all()[0].name in ["doctors_group"]]
+
+            return render(request, "all_doctors.html", {'form': form, "doctors":doctors})
+        else:
+            print("Invalid form")
+            print(form.errors)
+
+    return  render(request, "all_doctors.html", {'form': form, "doctors":doctors})
+
 
 @csrf_exempt
 def patient_statistics(request):
@@ -77,6 +97,10 @@ def patient_statistics(request):
     person = Person.objects.get(nif=nif)
     p = Patient.objects.get(person=person)
     patient_gestures = list(Gesture.objects.filter(patient=p))
+
+    gestures_dict = {}
+    for g in patient_gestures:
+        gestures_dict[str(g.id)] = [g.name, g.patient_difficulty, g.default_difficulty]
 
     notes_form = UpdateNotes(p)
     add_gesture_form = AddGesture()
@@ -93,7 +117,7 @@ def patient_statistics(request):
                 g.save()
                 patient_gestures = list(Gesture.objects.filter(patient=p))
 
-                return render(request, "patient_statistics.html", {"form": add_gesture_form, "form_notes": notes_form, "nif": nif, "patient":p, "patient_gestures":patient_gestures})
+                return render(request, "patient_statistics.html", {"form": add_gesture_form, "form_notes": notes_form, "nif": nif, "patient":p, "patient_gestures":patient_gestures, "gestures_dict" : gestures_dict})
            else:
                 print("Invalid form")
         else:
@@ -103,11 +127,12 @@ def patient_statistics(request):
                 Patient.objects.filter(person=person).update(notes=form.cleaned_data["notes"])
                 p = Patient.objects.get(person=person)
                 notes_form = UpdateNotes(p)
-                return render(request, "patient_statistics.html", {"form": add_gesture_form, "form_notes": notes_form, "nif": nif , "patient":p, "patient_gestures":patient_gestures})
+                return render(request, "patient_statistics.html", {"form": add_gesture_form, "form_notes": notes_form, "nif": nif , "patient":p, "patient_gestures":patient_gestures, "gestures_dict":gestures_dict})
             else:
                 print("Invalid form")
 
-    return render(request, "patient_statistics.html", {"form":add_gesture_form, "form_notes": notes_form,  "nif" : nif, "patient":p, "patient_gestures":patient_gestures})
+    return render(request, "patient_statistics.html", {"form":add_gesture_form, "form_notes": notes_form,  "nif" : nif, "patient":p, "patient_gestures":patient_gestures, "gestures_dict":gestures_dict})
+
 
 
 def admin_statistics(request):
@@ -131,8 +156,19 @@ def general_statistics(request):
     # if user is not authenticaded -> login
     if not request.user.is_authenticated:
         return redirect("login")
-    return render(request, "general_statistics.html", {"user":request.user})
 
+    groups_count = {"Doctors" : 0, "Patients" : 0, "Admins" : 0}
+    people = Person.objects.all()
+    for p in people:
+        if p.user.groups.all()[0].name in ["doctors_group"]:
+            groups_count["Doctors"] += 1
+        if p.user.groups.all()[0].name in ["admins_group"]:
+            groups_count["Admins"] += 1
+        if p.user.groups.all()[0].name in ["patients_group"]:
+            groups_count["Patients"] += 1
+
+
+    return render(request, "general_statistics.html", {"user":request.user, "groups_count":groups_count})
 
 def all_games(request):
     # if user is not authenticaded -> login

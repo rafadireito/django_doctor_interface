@@ -14,7 +14,7 @@
     <script type="text/javascript">
 
         var gesturesChart = null;
-        var gamesScoresChart = null;
+        var topGamesChart = null;
         window.onload = function(){
 
             var slider = document.getElementById("myRange").firstChild.nextSibling;
@@ -24,190 +24,131 @@
             slider.oninput = function() {
               output.innerHTML = this.value + " %";
             }
-            var ctx = document.getElementById("gamesScoresChart").getContext("2d");
+
+            var ctx = document.getElementById("topGamesChart").getContext("2d");
 
             if(ctx) {
                 ctx.height = 150;
-                gamesScoresChart = new Chart(ctx, {
-                type: 'line',
+                topGamesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                      labels: [],
+                      datasets: [
+                        {
+                          label: "Games",
+                          data: [],
+                          borderColor: "rgba(93, 213, 93, 0.9)",
+                          borderWidth: "0",
+                          backgroundColor: "rgba(93, 213, 93, 0.5)"
+                        }
+                      ]
+                    },
+                    options: {
+                      legend: {
+                        position: 'top',
+                        labels: {
+                          fontFamily: 'Poppins'
+                        }
+
+                      },
+                      scales: {
+                        xAxes: [{
+                          ticks: {
+                            fontFamily: "Poppins"
+
+                          }
+                        }],
+                        yAxes: [{
+                          ticks: {
+                            beginAtZero: true,
+                            fontFamily: "Poppins"
+                          }
+                        }]
+                      }
+                    }
+                  });
+                }
+
+            //bar chart
+            var ctx2 = document.getElementById("gesturesChart");
+            if (ctx2) {
+              ctx2.height = 150;
+              gesturesChart = new Chart(ctx2, {
+                type: 'bar',
+                defaultFontFamily: 'Poppins',
                 data: {
                   labels: [],
-                  type: 'line',
-                  defaultFontFamily: 'Poppins',
-                  datasets: [{
-                    label: "",
-                    data: [],
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(0,224,15,0.8)',
-                    borderWidth: 3,
-                    pointStyle: 'circle',
-                    pointRadius: 5,
-                    pointBorderColor: 'transparent',
-                    pointBackgroundColor: 'rgba(0,224,15,1)',
-                  }, {
-                    label: "",
-                    data: [],
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(224,0,205,0.8)',
-                    borderWidth: 3,
-                    pointStyle: 'circle',
-                    pointRadius: 5,
-                    pointBorderColor: 'transparent',
-                    pointBackgroundColor: 'rgba(224,0,205,1)',
-                  },{
-                    label: "",
-                    data: [],
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(227,15,0,0.8)',
-                    borderWidth: 3,
-                    pointStyle: 'circle',
-                    pointRadius: 5,
-                    pointBorderColor: 'transparent',
-                    pointBackgroundColor: 'rgba(227,15,0,1)',
-                  }, {
-                    label: "",
-                    data: [],
-                    backgroundColor: 'transparent',
-                    borderColor: 'rgba(0,211,230,0.8)',
-                    borderWidth: 3,
-                    pointStyle: 'circle',
-                    pointRadius: 5,
-                    pointBorderColor: 'transparent',
-                    pointBackgroundColor: 'rgba(0,211,230,1)',
-                  }]
+                  datasets: [
+                    {
+                      label: "Default Difficulty",
+                      data: [],
+                      borderColor: "rgba(0, 123, 255, 0.9)",
+                      borderWidth: "0",
+                      backgroundColor: "rgba(0, 123, 255, 0.5)",
+                      fontFamily: "Poppins"
+                    },
+                    {
+                      label: "User Difficulty",
+                      data: [],
+                      borderColor: "rgba(0,0,0,0.09)",
+                      borderWidth: "0",
+                      backgroundColor: "rgba(0,0,0,0.07)",
+                      fontFamily: "Poppins"
+                    }
+                  ]
                 },
                 options: {
-                  responsive: true,
-                  tooltips: {
-                    mode: 'index',
-                    titleFontSize: 12,
-                    titleFontColor: '#000',
-                    bodyFontColor: '#000',
-                    backgroundColor: '#fff',
-                    titleFontFamily: 'Poppins',
-                    bodyFontFamily: 'Poppins',
-                    cornerRadius: 3,
-                    intersect: false,
-                  },
                   legend: {
-                    display: false,
+                    position: 'top',
                     labels: {
-                      usePointStyle: true,
-                      fontFamily: 'Poppins',
-                    },
+                      fontFamily: 'Poppins'
+                    }
+
                   },
                   scales: {
                     xAxes: [{
-                      display: true,
-                      gridLines: {
-                        display: false,
-                        drawBorder: false
-                      },
-                      scaleLabel: {
-                        display: true,
-                        labelString: 'Week'
-                      },
                       ticks: {
                         fontFamily: "Poppins"
+
                       }
                     }],
                     yAxes: [{
-                      display: true,
-                      gridLines: {
-                        display: false,
-                        drawBorder: false
-                      },
-                      scaleLabel: {
-                        display: true,
-                        labelString: 'Highscore',
-                        fontFamily: "Poppins"
-
-                      },
                       ticks: {
+                        beginAtZero: true,
                         fontFamily: "Poppins"
                       }
                     }]
-                  },
-                  title: {
-                    display: false,
-                    text: 'Normal Legend'
                   }
                 }
-                });
+              });
             }
 
-            var ctx = document.getElementById("gesturesChart").getContext("2d");
-            if (ctx) {
-                ctx.height = 150;
-                gesturesChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        datasets: [{
-                            data: [],
-                            backgroundColor: [
-                                "rgba(138, 120, 255, 0.8)",
-                                "rgba(255, 197, 120, 0.8)",
-                                "rgba(237, 255, 120, 0.8)",
-                                "rgba(255, 120, 237, 0.8)"
-                            ],
-                            hoverBackgroundColor: [
-                                "rgba(138, 120, 255, 1)",
-                                "rgba(255, 197, 120, 1)",
-                                "rgba(237, 255, 120, 1)",
-                                "rgba(255, 120, 237, 1)"
-                            ]
+            getData();
 
-                        }],
-                        labels: []
-                    },
+        }
 
-                    options: {
-                        maintainAspectRatio: true,
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                fontFamily: 'Poppins'
-                            }
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.split(search).join(replacement);
+        };
 
-                        },
-                        responsive: true
-                    }
-                });
-            }
+        function getData() {
+            gestureJSON = JSON.parse(document.getElementById("gestureChart_dict").innerHTML.replaceAll('\'', '\"'))
 
-            //ADD DATA
-            gamesScoresChart.data.labels = [];
-            gamesScoresChart.data.datasets.forEach((dataset) => {
-                dataset.label = "";
-                dataset.data = [];
+            topGamesChart.data.labels = [];
+            topGamesChart.data.datasets[0].data=[];
+
+            topGamesChart.data.labels = ["Flappy Bird", "Gun Fight", "Quiz", "Space Invaders"];
+            topGamesChart.data.datasets[0].data = [22,16,30,9];
+            topGamesChart.update();
+
+            Object.keys(gestureJSON).forEach(function(id) {
+                gesturesChart.data.labels.push(gestureJSON[id][0])
+                gesturesChart.data.datasets[0].data.push(gestureJSON[id][2])
+                gesturesChart.data.datasets[1].data.push(gestureJSON[id][1])
             });
-            gesturesChart.data.datasets[0].data = [];
-            gesturesChart.data.labels = [];
 
-            switch (""+{{ nif }}) {
-                case "11092874":
-                    document.getElementById("current_patient").innerHTML += "Daniel Nunes";
-                    gamesScoresChart.data.labels = ["1", "2", "3", "4"];
-                    gamesScoresChart.data.datasets[0].label = "Flappy Bird";
-                    gamesScoresChart.data.datasets[0].data = ["10", "12", "5", "21"];
-                    gamesScoresChart.data.datasets[1].label = "Space Invaders";
-                    gamesScoresChart.data.datasets[1].data = ["40", "45", "32", "44"];
-                    gamesScoresChart.update();
-                    gesturesChart.data.datasets[0].data = [40,60];
-                    gesturesChart.data.labels = ["Mão Aberta","Três dedos levantados"];
-                    gesturesChart.update();
-                    break;
-                case "223344565":
-                    document.getElementById("current_patient").innerHTML += "Rafael Direito";
-                    gamesScoresChart.data.labels = ["1", "2", "3", "4", "5", "6"];
-                    gamesScoresChart.data.datasets[0].label = "Gun Fight";
-                    gamesScoresChart.data.datasets[0].data = ["2", "5", "15", "35", "40", "41"];
-                    gamesScoresChart.update();
-                    gesturesChart.data.datasets[0].data = [60,10,30];
-                    gesturesChart.data.labels = ["Mão fechada","Dois dedos levantados","Polegar e mindinho levantados"];
-                    gesturesChart.update();
-                    break;
-            }
+            gesturesChart.update();
         }
 
         Function.prototype.toJSON = function() {
@@ -584,16 +525,17 @@
                                         <div class="col-lg-6">
                                             <div class="au-card m-b-30">
                                                 <div class="au-card-inner">
-                                                    <h3 class="title-2 m-b-40">Games Scores</h3>
-                                                    <canvas id="gamesScoresChart"></canvas>
+                                                    <h3 class="title-2 m-b-40">Games Played</h3>
+                                                    <canvas id="topGamesChart"></canvas>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="au-card m-b-30">
                                                 <div class="au-card-inner">
-                                                    <h3 class="title-2 m-b-40">Gestures</h3>
+                                                    <h3 class="title-2 m-b-40">Gestures Difficulty</h3>
                                                     <canvas id="gesturesChart"></canvas>
+                                                    <h1 style="display:none" id="gestureChart_dict">{{ gestures_dict }}</h1>
                                                 </div>
                                             </div>
                                         </div>

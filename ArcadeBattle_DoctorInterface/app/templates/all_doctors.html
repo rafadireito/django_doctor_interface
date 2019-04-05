@@ -9,8 +9,28 @@
             $('.dataTables_length').addClass('bs-select');
         });
         
-        function access_patient(tr) {
-            window.location.href = "http://localhost:8000/doctor_statistics?nif=" + tr.childNodes[5].textContent;
+        function access_patient(td) {
+            window.location.href = "{% url 'doctor_statistics' %}?nif=" + td.parentNode.childNodes[5].textContent;
+        }
+
+        function loadInfo(first_name, last_name, email)
+        {
+            document.getElementById("id_first_name").value = first_name;
+            $("#id_first_name").prop('disabled', true);
+            document.getElementById("id_last_name").value = last_name;
+            $("#id_last_name").prop('disabled', true);
+            document.getElementById("id_email").value = email;
+            $("#id_email").prop('disabled', true);
+        }
+
+        function removeDisabled()
+        {
+            $("#id_first_name").css("background-color", "#dadada");
+            $("#id_last_name").css("background-color", "#dadada");
+            $("#id_email").css("background-color", "#dadada");
+            $("#id_first_name").prop('disabled', false);
+            $("#id_last_name").prop('disabled', false);
+            $("#id_email").prop('disabled', false);
         }
     </script>
 
@@ -31,15 +51,24 @@
                                 <th class="text-center">Birth Date</th>
                                 <th class="text-center">NIF</th>
                                 <th>E-mail</th>
+                                <th>Rem.</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for d in doctors %}
-                            <tr onclick="access_patient(this)">
-                                <td>{{ d.user.first_name }} {{ d.user.last_name }}</td>
-                                <td class="text-center">{{ d.birth_date }}</td>
-                                <td class="text-center">{{ d.nif }}</td>
-                                <td>{{ d.user.username }}</td>
+                            <tr>
+                                <td onclick="access_patient(this)">{{ d.user.first_name }} {{ d.user.last_name }}</td>
+                                <td class="text-center" onclick="access_patient(this)">{{ d.birth_date }}</td>
+                                <td class="text-center" onclick="access_patient(this)">{{ d.nif }}</td>
+                                <td onclick="access_patient(this)">{{ d.user.username }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger"
+                                        data-toggle="modal" data-target="#deleteModal"
+                                        onclick="loadInfo('{{ d.user.first_name }}', '{{ d.user.last_name }}', '{{ d.user.username }}')">
+                                        Remove
+                                    </button>
+                                </td>
+
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -49,4 +78,66 @@
         </div>
     </div>
 </div>
+
+    <!-- modal add gesture -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Are you sure you want to remove: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+                <div class="modal-body">
+
+                    <div class="row form-group">
+
+                        <div class="input-group">
+                            <div class="input-group-addon col-lg-4 offset-lg-1">
+                                <i class="fa fa-phone"></i> {{ form.first_name.label }}
+                            </div>
+                            <div class="input-group-addon col-lg-6" style="background-color:#dadada" >
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 20px">
+                            <div class="input-group-addon col-lg-4 offset-lg-1">
+                                <i class="fa fa-phone"></i> {{ form.last_name.label }}
+                            </div>
+                            <div class="input-group-addon col-lg-6" style="background-color:#dadada" >
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="margin-top: 20px">
+                            <div class="input-group-addon col-lg-4 offset-lg-1">
+                                <i class="fa fa-phone"></i> {{ form.email.label }}
+                            </div>
+                            <div class="input-group-addon col-lg-6" style="background-color:#dadada" >
+                                {{ form.email }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" onclick="removeDisabled()">Remove</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+
 {% endblock %}
