@@ -109,8 +109,11 @@ class UpdateProfile(forms.Form):
     birth_date = forms.DateField(label="Birth Date", help_text="Insert doctor birth date",
                                  widget=forms.SelectDateWidget(years=range(1900, 2019)))
     contact = forms.IntegerField(label="Contact", help_text="Insert doctors contact")
-    email = forms.EmailField(label="Email", help_text="Insert doctors email")
+    email = forms.EmailField(label="Email", help_text="Insert doctors email", widget=forms.TextInput(attrs={'readonly':'readonly'}))
     photo = forms.FileField(label="Photo", required=False, widget=forms.FileInput(attrs={'onchange' : 'readFile(this)'}))
+
+    new_password = forms.CharField(label="New Password", required=False, widget=forms.PasswordInput())
+    repeat_password = forms.CharField(label="Repeat  Password", required=False, widget=forms.PasswordInput())
 
 
 class AddGame(forms.Form):

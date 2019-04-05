@@ -368,10 +368,10 @@ def about(request):
 
     if request.method == 'POST':
         form = UpdateProfile(None, request.POST, request.FILES)
-        print(form)
         if form.is_valid():
             # get info form form
             form_data = form.cleaned_data
+            print(form_data)
             first_name = form_data["first_name"]
             last_name = form_data["last_name"]
             contact = form_data["contact"]
@@ -379,10 +379,16 @@ def about(request):
             photo = form_data["photo"]
             birth_date = form_data["birth_date"]
             nif = form_data["nif"]
+            password = form_data["new_password"]
 
             # get user and udate it
             u = User.objects.filter(username=email)
             u.update(first_name=first_name, last_name=last_name)
+
+            if password != '':
+                usr = User.objects.get(username=email)
+                usr.set_password(password)
+                usr.save()
 
             # get user and udate it
             p = Person.objects.filter(user=u[0])
@@ -393,8 +399,6 @@ def about(request):
                 photo_b64 = base64.b64encode(photo.file.read())
                 photo_b64 = photo_b64.decode()
                 p = p.update(photo_b64=photo_b64)
-
-
 
             return redirect("/")
         else:

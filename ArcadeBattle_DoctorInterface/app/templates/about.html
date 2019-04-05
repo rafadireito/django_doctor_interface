@@ -49,7 +49,7 @@
                 <div class="col-lg-12" style="text-align: center; padding-top: 5%">
                     <h1>EDIT PROFILE</h1>
                 </div>
-                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="" onsubmit="return dataCheck(this)" method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="card-body card-block">
                         <div class="card-body card-block row">
 
@@ -131,6 +131,24 @@
                                 </div>
                             </div>
 
+                            <div class="row form-group col-lg-12 col-md-12 col-sm-12">
+                                <div class="col-12 col-md-4 col-sm-6 form-control" style="margin-bottom:30px; border: 0; text-align: right">
+                                    {{ form.new_password.label_tag }}
+                                </div>
+                                <div class="col-12 col-md-6 col-sm-6" style="margin-bottom:30px">
+                                    {{ form.new_password }}
+                                </div>
+                            </div>
+
+                            <div class="row form-group col-lg-12 col-md-12 col-sm-12">
+                                <div class="col-12 col-md-4 col-sm-6 form-control" style="margin-bottom:30px; border: 0; text-align: right">
+                                    {{ form.repeat_password.label_tag }}
+                                </div>
+                                <div class="col-12 col-md-6 col-sm-6" style="margin-bottom:30px">
+                                    {{ form.repeat_password }}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="card-footer">
@@ -148,6 +166,13 @@
     </div>
 
     <script type="text/javascript">
+        function dataCheck(form){
+            if(form.new_password.value == form.repeat_password.value)
+                return true;
+            alert("Passwords must be equal")
+            return false
+        }
+
         function readFile(el) {
             if (el.files && el.files[0]) {
                  var FR= new FileReader();
