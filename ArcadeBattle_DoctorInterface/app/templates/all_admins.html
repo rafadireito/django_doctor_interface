@@ -10,7 +10,7 @@
         });
         
         function access_patient(td) {
-            window.location.href = "{% url 'admin_statistics' %}?nif=" + td.parentNode.childNodes[5].textContent;
+            window.location.href = "{% url 'admin_statistics' %}?email=" + td.parentNode.childNodes[7].textContent;
         }
 
         function loadInfo(first_name, last_name, email)

@@ -2,24 +2,11 @@
 {% load staticfiles %}
 {% block content %}
 
-    <script type="text/javascript">
-        window.onload = function(){
-            switch (""+{{ nif }}) {
-                case "1":
-                    document.getElementById("current_admin").innerHTML += "Admin 1";
-                    break;
-                case "2":
-                    document.getElementById("current_admin").innerHTML += "Admin 2";
-                    break;
-            }
-        }
-    </script>
-
 <div class="section__content section__content--p30">
     <div class="container-fluid" style="margin-top: 2%">
         <div class="row">
             <div class="col-lg-12 form-group">
-                <h1 id="current_admin">Admin: </h1>
+                <h1 id="current_admin">Admin: {{ admin.user.first_name }} {{ admin.user.last_name }}</h1>
             </div>
         </div>
         <div class="row" style="margin-top: 2%">

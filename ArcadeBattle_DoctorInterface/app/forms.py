@@ -7,14 +7,18 @@ class AddPatient(forms.Form):
     def __init__(self, *args, **kwargs):
         super(forms.Form, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if field_name != 'photo':
+            if field_name != 'photo' and field_name != 'birth_date':
                 field.widget.attrs['placeholder'] = field.help_text
                 field.widget.attrs['class'] = 'form-control'
 
-    name = forms.CharField(label="Name", help_text="Insert patient name")
+    first_name = forms.CharField(label="First Name", help_text="Insert patient first name")
+    last_name = forms.CharField(label="Last Name", help_text="Insert patient last name")
+    nif = forms.IntegerField(label="NIF", help_text="Insert patient NIF")
     contact = forms.IntegerField(label="Contact", help_text="Insert patient contact")
     email = forms.EmailField(label="Email", help_text="Insert patient email")
-    photo = forms.ImageField(label="Photo")
+    photo = forms.ImageField(label="Photo", required=False)
+    birth_date = forms.DateField(label="Birth Date", help_text="Insert patient birth date",
+                                 widget=forms.SelectDateWidget(years=range(1900, 2019)))
 
 
 class AddAdmin(forms.Form):
