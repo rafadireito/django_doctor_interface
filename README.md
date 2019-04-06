@@ -18,6 +18,12 @@ Not being the main goal, it is still possible to access the administrator interf
 ## LIMITATIONS
 When hosted on pythonanywhere.com, the password for each new user created will be "pw", since the free plan of this hosting service doesn't allow django to send emails.
 
+## HOW TO RUN
+1. Delete the database, if it's already created;
+2. Build the database;
+3. Create a superuser;
+4. Run the project;
+5. Once the project is running, access to .../reload_database to generate different users.
 
 ## ACCESSES
 
