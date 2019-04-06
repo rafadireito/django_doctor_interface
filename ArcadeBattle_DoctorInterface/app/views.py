@@ -17,7 +17,7 @@ from django.conf import settings
 
 # Create your views here.
 from app.models import Person, Game, Patient, Gesture, GamePlayed
-
+from datetime import date
 
 def index(request):
     # if user is not authenticaded -> login
@@ -249,8 +249,26 @@ def general_statistics(request):
         return redirect("login")
 
     groups_count = {"Doctors" : 0, "Patients" : 0, "Admins" : 0}
+
+    max_age = {"Name": "", "Age":0, "Photo": ""}
+    min_age = {"Name": "", "Age": 0, "Photo": ""}
+
+    today = date.today()
+
     people = Person.objects.all()
     for p in people:
+        born = p.birth_date
+        age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+        if min_age["Age"] == 0 or min_age["Age"] > age:
+            min_age["Age"] = age
+            min_age["Name"] = p.user.first_name + " " + p.user.last_name
+            min_age["Photo"] = p.photo_b64
+
+        if max_age["Age"] < age:
+            max_age["Age"] = age
+            max_age["Name"] = p.user.first_name + " " + p.user.last_name
+            max_age["Photo"] = p.photo_b64
+
         if p.user.groups.all()[0].name in ["doctors_group"]:
             groups_count["Doctors"] += 1
         if p.user.groups.all()[0].name in ["admins_group"]:
@@ -258,8 +276,23 @@ def general_statistics(request):
         if p.user.groups.all()[0].name in ["patients_group"]:
             groups_count["Patients"] += 1
 
+    gamesPlayed = {}
+    gesturesUsed = {}
 
-    return render(request, "general_statistics.html", {"user":request.user, "groups_count":groups_count})
+    games = GamePlayed.objects.all()
+    for g in games:
+        if g.game.name not in gamesPlayed.keys():
+            gamesPlayed[g.game.name] = 1
+        else:
+            gamesPlayed[g.game.name] += 1
+
+        if g.gesture.name not in gesturesUsed.keys():
+            gesturesUsed[g.gesture.name] = 1
+        else:
+            gesturesUsed[g.gesture.name] += 1
+
+
+    return render(request, "general_statistics.html", {"user":request.user, "gesturesUsed":gesturesUsed, "gamesPlayed" : gamesPlayed,  "groups_count":groups_count, "min_age":min_age, "max_age":max_age})
 
 def all_games(request):
     # if user is not authenticaded -> login
