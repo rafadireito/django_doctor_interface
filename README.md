@@ -15,6 +15,10 @@ Not being the main goal, it is still possible to access the administrator interf
 ### EXTRA
 *  **Django Core Mail**: In our application, the users aren't abble to register themselves. For a user to be register into the system, it is mandatory that this is user is added by a doctor (can add patients) or by an admin (can add admins, doctors and patients). The new user will have to provide a valid e-mail address and a password will be sent to this e-mail, allowing the user to access the application.
 
+## LIMITATIONS
+When hosted on pythonanywhere.com, the password for each new user created will be "pw", since the free plan of this hosting service doesn't allow django to send emails.
+
+
 ## ACCESSES
 
 ### OWNER
