@@ -25,6 +25,8 @@ When hosted on pythonanywhere.com, the password for each new user created will b
 4. Run the project;
 5. Once the project is running, access to .../reload_database to generate different users.
 
+The project is also available at rdireito.pythonanywhere.com. 
+
 ## ACCESSES
 
 ### OWNER
