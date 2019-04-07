@@ -28,7 +28,7 @@ SECRET_KEY = '(k12o97nn@xw(!m2wm2s**tx^(-c-xo)b0bgbvn99+tl7n45%)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://rdireito.pythonanywhere.com"]
+ALLOWED_HOSTS = ["rdireito.pythonanywhere.com", "127.0.0.1"]
 
 
 # Application definition
