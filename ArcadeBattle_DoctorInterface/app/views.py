@@ -196,7 +196,12 @@ def patient_statistics(request):
                             patient_difficulty=0, decision_tree=form.cleaned_data["decision_tree"])
 
                 g.save()
+
                 patient_gestures = list(Gesture.objects.filter(patient=p))
+
+                gestures_dict = {}
+                for g in patient_gestures:
+                    gestures_dict[str(g.id)] = [g.name, g.patient_difficulty, g.default_difficulty]
 
                 return render(request, "patient_statistics.html",
                               {"form": add_gesture_form, "form_notes": notes_form, "gesture_form": remove_gesture_form,
@@ -214,7 +219,7 @@ def patient_statistics(request):
                 return render(request, "patient_statistics.html",
                               {"form": add_gesture_form, "form_notes": notes_form, "gesture_form": remove_gesture_form,
                                "patient": p, "patient_gestures": patient_gestures,
-                               "gestures_dict": gestures_dict})
+                               "gestures_dict": gestures_dict, "games_quant":games_quant})
             else:
                 print("Invalid form")
 
